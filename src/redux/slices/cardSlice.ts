@@ -32,6 +32,7 @@ interface Card {
     updatedAt: string;
     executed: boolean;
     evaluated: boolean; // Add this line to include the evaluated property
+    inconsistentState: boolean;
 }
 
 interface CardState {

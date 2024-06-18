@@ -1,8 +1,11 @@
 // src/components/Flow/Flow.tsx
+
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
 import dagre from 'dagre';
 import { setNextCard, setPreviousCard } from '../../services/api';
+import CardNode from './CardNode';
+import { FlowContainer } from './Flow.styles';
 
 interface FlowProps {
   initialNodes: Node[];
@@ -14,20 +17,30 @@ const nodeHeight = 36;
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
-dagreGraph.setGraph({ rankdir: 'TB' });
+dagreGraph.setGraph({ rankdir: 'LR', nodesep: 100, ranksep: 100 });
+
+const edgeOptions = {
+  animated: true,
+  style: { stroke: '#000' },
+  arrowHeadType: 'arrowclosed',
+};
+
+const nodeTypes = {
+  cardNode: CardNode,
+};
 
 const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(async (params: Edge | Connection) => {
-    setEdges((eds) => addEdge(params, eds));
+    const newEdge = { ...params, ...edgeOptions };
+    setEdges((eds) => addEdge(newEdge, eds));
 
     const { source, target } = params;
 
     if (source && target) {
       try {
-        // Call the backend API to link the cards as next and previous
         await setNextCard(source, [target]);
         await setPreviousCard(target, [source]);
       } catch (error) {
@@ -37,7 +50,6 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
   }, [setEdges]);
 
   useEffect(() => {
-    // Layout nodes using dagre
     initialNodes.forEach((node) => {
       dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
     });
@@ -54,6 +66,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
         x: nodeWithPosition.x - nodeWidth / 2,
         y: nodeWithPosition.y - nodeHeight / 2,
       };
+      node.type = 'cardNode';
       return node;
     });
 
@@ -61,20 +74,23 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
   }, [initialNodes, initialEdges]);
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
+    <FlowContainer>
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={edges.map(edge => ({ ...edge, ...edgeOptions }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
+        fitViewOptions={{ padding: 0.2 }}
+        defaultZoom={0.8}
+        nodeTypes={nodeTypes}
       >
         <MiniMap />
         <Controls />
         <Background />
       </ReactFlow>
-    </div>
+    </FlowContainer>
   );
 };
 

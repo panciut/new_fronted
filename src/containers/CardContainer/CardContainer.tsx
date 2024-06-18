@@ -1,4 +1,5 @@
 // src/containers/CardContainer/CardContainer.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -40,9 +41,9 @@ const CardContainer: React.FC = () => {
           key={card._id}
           title={card.title}
           objective={card.objective}
-          hasOutput={!!card.output}
           executed={card.executed}
           evaluated={card.evaluated}
+          inconsistentState={card.inconsistentState}
         />
       ))}
     </CardContainerWrapper>
