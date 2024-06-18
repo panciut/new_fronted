@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchTasks } from '../../services/api';
-import './TaskContainer.css';
+import { TaskContainerWrapper, TaskItem } from './TaskContainer.styles';
 
 interface Task {
   _id: string;
   name: string;
   objective: string;
+  cards: any[]; // Replace `any` with the appropriate type if available
 }
 
 const TaskContainer: React.FC = () => {
@@ -35,18 +36,15 @@ const TaskContainer: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="task-container">
+    <TaskContainerWrapper>
       {tasks.map((task) => (
-        <div
-          key={task._id}
-          className="task"
-          onClick={() => navigate(`/task/${task._id}`)}
-        >
+        <TaskItem key={task._id} onClick={() => navigate(`/task/${task._id}`)}>
           <h2>{task.name}</h2>
           <p>{task.objective}</p>
-        </div>
+          <p>Number of Cards: {task.cards.length}</p>
+        </TaskItem>
       ))}
-    </div>
+    </TaskContainerWrapper>
   );
 };
 

@@ -5,7 +5,7 @@ import { RootState } from '../../redux/store';
 import Card from '../../components/Card/Card';
 import { setCards } from '../../redux/slices/cardSlice';
 import { fetchCards } from '../../services/api';
-import './CardContainer.css';
+import { CardContainerWrapper } from './CardContainer.styles';
 
 const CardContainer: React.FC = () => {
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const CardContainer: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="card-container">
+    <CardContainerWrapper>
       {cards.map((card) => (
         <Card
           key={card._id}
@@ -45,7 +45,7 @@ const CardContainer: React.FC = () => {
           evaluated={card.evaluated}
         />
       ))}
-    </div>
+    </CardContainerWrapper>
   );
 };
 

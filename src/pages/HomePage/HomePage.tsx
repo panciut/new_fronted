@@ -1,21 +1,21 @@
 // src/pages/HomePage/HomePage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './HomePage.css';
+import { HomePageContainer, Button } from './HomePage.styles';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="home-page">
+    <HomePageContainer>
       <h1>Home Page</h1>
-      <button className="tasks-button" onClick={() => navigate('/tasks')}>
+      <Button onClick={() => navigate('/tasks')}>
         View Tasks
-      </button>
-      <button className="cards-button" onClick={() => navigate('/cards')}>
+      </Button>
+      <Button onClick={() => navigate('/cards')}>
         View All Cards
-      </button>
-    </div>
+      </Button>
+    </HomePageContainer>
   );
 };
 

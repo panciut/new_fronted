@@ -1,6 +1,6 @@
 // src/components/Card/Card.tsx
 import React from 'react';
-import './Card.css';
+import { CardContainer, CardTitle } from './Card.styles';
 
 interface CardProps {
   title: string;
@@ -12,13 +12,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, objective, hasOutput, executed, evaluated }) => {
   return (
-    <div className="card">
-      <h2>{title}</h2>
+    <CardContainer>
+      <CardTitle>{title}</CardTitle>
       <p>{objective}</p>
       <p>{hasOutput ? 'Has Output' : 'No Output'}</p>
       <p>{executed ? 'Executed' : 'Not Executed'}</p>
       <p>{evaluated ? 'Evaluated' : 'Not Evaluated'}</p>
-    </div>
+    </CardContainer>
   );
 };
 

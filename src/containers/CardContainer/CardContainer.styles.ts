@@ -1,2 +1,7 @@
 // src/containers/CardContainer/CardContainer.styles.ts
-export {};
+import styled from 'styled-components';
+
+export const CardContainerWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
