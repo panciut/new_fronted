@@ -3,14 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
-import AddCardForm from '../../components/AddCardForm/AddCardForm';
+import AddCardModal from '../../components/AddCardModal/AddCardModal';
 import { Node, Edge } from 'react-flow-renderer';
+import { Button } from './TaskDetailPage.styles';
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [task, setTask] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchTaskData = async () => {
     if (id) {
@@ -49,9 +51,6 @@ const TaskDetailPage: React.FC = () => {
   const edges: Edge[] = [];
 
   task.cards.forEach((card: any) => {
-    // Log the card to debug
-    console.log('Processing card:', card);
-
     // Create edges for nextCards if they exist
     if (Array.isArray(card.nextCards)) {
       card.nextCards.forEach((nextCardId: string) => {
@@ -89,15 +88,19 @@ const TaskDetailPage: React.FC = () => {
     }
   });
 
-  console.log('Nodes:', nodes);
-  console.log('Edges:', edges);
-
   return (
     <div>
       <h1>{task.name}</h1>
       <p>{task.objective}</p>
+      <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
       <Flow initialNodes={nodes} initialEdges={edges} />
-      <AddCardForm taskId={task._id} onCardCreated={handleCardCreated} />
+      <AddCardModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        taskId={task._id}
+        currentCards={task.cards}
+        onCardCreated={handleCardCreated}
+      />
     </div>
   );
 };

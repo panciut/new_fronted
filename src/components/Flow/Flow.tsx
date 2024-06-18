@@ -1,6 +1,7 @@
 // src/components/Flow/Flow.tsx
 import React, { useCallback } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
+import { FlowContainer } from './Flow.styles';
 
 interface FlowProps {
   initialNodes: Node[];
@@ -14,7 +15,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
   const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
+    <FlowContainer>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -27,7 +28,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
         <Controls />
         <Background />
       </ReactFlow>
-    </div>
+    </FlowContainer>
   );
 };
 

@@ -42,3 +42,13 @@ export const fetchCards = async () => {
         throw error;
     }
 };
+
+export const createCard = async (card: any) => {
+    try {
+        const response = await axios.post(`${API_URL}/cards`, card);
+        return response.data;
+    } catch (error) {
+        console.error('Error creating card:', error);
+        throw error;
+    }
+};
