@@ -12,8 +12,8 @@ if (container) {
 
   root.render(
     <Provider store={store}>
-      <App />,
-    </Provider>,
+      <App />
+    </Provider>
   );
 } else {
   console.error('Root container missing in index.html');

@@ -1,25 +1,13 @@
 // src/pages/TaskDetailPage/TaskDetailPage.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
 import AddCardModal from '../../components/AddCardModal/AddCardModal';
 import { Node, Edge } from 'react-flow-renderer';
-import { Button } from './TaskDetailPage.styles';
-import styled from 'styled-components';
-
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-`;
-
-const ContentContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
+import { Button, OptionsBar, TaskInfo, ContentContainer, PageContainer } from './TaskDetailPage.styles';
+import CardDetailPopover from '../../components/CardDetailPopover/CardDetailPopover'; // Import the new component
 
 const edgeOptions = {
   animated: true,
@@ -33,6 +21,7 @@ const TaskDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null); // State for selected card ID
 
   const fetchTaskData = async () => {
     if (id) {
@@ -57,6 +46,10 @@ const TaskDetailPage: React.FC = () => {
   const handleCardCreated = () => {
     fetchTaskData();
   };
+
+  const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    setSelectedCardId(node.id);
+  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -111,11 +104,15 @@ const TaskDetailPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <h1>{task.name}</h1>
-      <p>{task.objective}</p>
-      <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
+      <OptionsBar>
+        <TaskInfo>
+          <h1>{task.name}</h1>
+          <p>{task.objective}</p>
+        </TaskInfo>
+        <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
+      </OptionsBar>
       <ContentContainer>
-        <Flow initialNodes={nodes} initialEdges={edges} />
+        <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} /> {/* Pass the onNodeClick handler */}
       </ContentContainer>
       <AddCardModal
         isOpen={isModalOpen}
@@ -124,6 +121,13 @@ const TaskDetailPage: React.FC = () => {
         currentCards={task.cards}
         onCardCreated={handleCardCreated}
       />
+      {selectedCardId && (
+        <CardDetailPopover
+          cardId={selectedCardId}
+          isOpen={!!selectedCardId}
+          onRequestClose={() => setSelectedCardId(null)}
+        />
+      )}
     </PageContainer>
   );
 };
