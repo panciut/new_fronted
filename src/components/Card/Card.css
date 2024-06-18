@@ -1,0 +1,11 @@
+/* src/components/Card/Card.css */
+.card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin: 16px;
+    border-radius: 8px;
+}
+
+.card h2 {
+    margin-top: 0;
+}

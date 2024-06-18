@@ -1,0 +1,5 @@
+/* src/containers/CardContainer/CardContainer.css */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}

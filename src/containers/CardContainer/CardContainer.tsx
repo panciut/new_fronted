@@ -5,6 +5,7 @@ import { RootState } from '../../redux/store';
 import Card from '../../components/Card/Card';
 import { setCards } from '../../redux/slices/cardSlice';
 import { fetchCards } from '../../services/api';
+import './CardContainer.css';
 
 const CardContainer: React.FC = () => {
   const dispatch = useDispatch();
@@ -33,9 +34,14 @@ const CardContainer: React.FC = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="card-container">
       {cards.map((card) => (
-        <Card key={card.id} title={card.title} content={card.content} />
+        <Card
+          key={card._id}
+          title={card.title}
+          objective={card.objective}
+          hasOutput={card.output && card.output.generatedText ? true : false}
+        />
       ))}
     </div>
   );

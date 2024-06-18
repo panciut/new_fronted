@@ -1,22 +1,20 @@
-//src/components/Card/Card.tsx
+// src/components/Card/Card.tsx
 import React from 'react';
-import { Card as MUICard, CardContent, Typography } from '@mui/material';
+import './Card.css';
 
 interface CardProps {
   title: string;
-  content: string;
+  objective: string;
+  hasOutput: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ title, content }) => {
+const Card: React.FC<CardProps> = ({ title, objective, hasOutput }) => {
   return (
-    <MUICard>
-      <CardContent>
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography variant="body2">{content}</Typography>
-      </CardContent>
-    </MUICard>
+    <div className="card">
+      <h2>{title}</h2>
+      <p>{objective}</p>
+      <p>{hasOutput ? 'Has Output' : 'No Output'}</p>
+    </div>
   );
 };
 
