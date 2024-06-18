@@ -7,7 +7,7 @@ import Flow from '../../components/Flow/Flow';
 import AddCardModal from '../../components/AddCardModal/AddCardModal';
 import { Node, Edge } from 'react-flow-renderer';
 import { Button, OptionsBar, TaskInfo, ContentContainer, PageContainer } from './TaskDetailPage.styles';
-import CardDetailPopover from '../../components/CardDetailPopover/CardDetailPopover'; // Import the new component
+import DraggablePopover from '../../components/DraggablePopover/DraggablePopover'; // Import the new component
 
 const edgeOptions = {
   animated: true,
@@ -21,7 +21,7 @@ const TaskDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null); // State for selected card ID
+  const [openPopovers, setOpenPopovers] = useState<string[]>([]); // State for open popovers
 
   const fetchTaskData = async () => {
     if (id) {
@@ -48,8 +48,12 @@ const TaskDetailPage: React.FC = () => {
   };
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    setSelectedCardId(node.id);
+    setOpenPopovers((prev) => [...prev, node.id]);
   }, []);
+
+  const handleClosePopover = (cardId: string) => {
+    setOpenPopovers((prev) => prev.filter((id) => id !== cardId));
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -121,13 +125,14 @@ const TaskDetailPage: React.FC = () => {
         currentCards={task.cards}
         onCardCreated={handleCardCreated}
       />
-      {selectedCardId && (
-        <CardDetailPopover
-          cardId={selectedCardId}
-          isOpen={!!selectedCardId}
-          onRequestClose={() => setSelectedCardId(null)}
+      {openPopovers.map((cardId, index) => (
+        <DraggablePopover
+          key={cardId}
+          cardId={cardId}
+          onRequestClose={() => handleClosePopover(cardId)}
+          index={index} // Pass the index to position the popovers
         />
-      )}
+      ))}
     </PageContainer>
   );
 };
