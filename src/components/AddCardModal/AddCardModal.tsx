@@ -1,7 +1,7 @@
 // src/components/AddCardModal/AddCardModal.tsx
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { FormContainer, FormLabel, FormInput, FormTextArea, FormButton } from './AddCardModal.styles';
+import { FormContainer, FormLabel, FormInput, FormTextArea, FormButton, CloseButton, DropdownSelect, DropdownButton, DropdownContainer, DropdownMenu } from './AddCardModal.styles';
 import { createCard } from '../../services/api'; // Import the API function
 
 interface AddCardModalProps {
@@ -19,6 +19,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
   const [nextCards, setNextCards] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
+  const [showPreviousDropdown, setShowPreviousDropdown] = useState(false);
+  const [showNextDropdown, setShowNextDropdown] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,6 +49,22 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
     }
   };
 
+  const togglePreviousDropdown = () => {
+    setShowPreviousDropdown(!showPreviousDropdown);
+  };
+
+  const toggleNextDropdown = () => {
+    setShowNextDropdown(!showNextDropdown);
+  };
+
+  const handlePreviousCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPreviousCards(Array.from(e.target.selectedOptions, option => option.value));
+  };
+
+  const handleNextCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setNextCards(Array.from(e.target.selectedOptions, option => option.value));
+  };
+
   return (
     <Modal 
       isOpen={isOpen} 
@@ -58,11 +76,18 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
           zIndex: 1000, // Ensure overlay is on top
         },
         content: {
+          top: '10px',
+          right: '10px',
+          bottom: '10px',
+          left: 'auto',
+          width: '30%', // Takes one-third of the page width
+          padding: '20px',
           zIndex: 1001, // Ensure modal content is on top
         }
       }}
     >
       <FormContainer>
+        <CloseButton onClick={onRequestClose}>×</CloseButton>
         <h2>Create New Card</h2>
         <form onSubmit={handleSubmit}>
           <FormLabel>
@@ -75,23 +100,37 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
           </FormLabel>
           <FormLabel>
             Previous Cards:
-            <select multiple value={previousCards} onChange={(e) => setPreviousCards(Array.from(e.target.selectedOptions, option => option.value))}>
-              {currentCards.map(card => (
-                <option key={card._id} value={card._id}>{card.title}</option>
-              ))}
-            </select>
+            <DropdownContainer>
+              <DropdownButton type="button" onClick={togglePreviousDropdown}>
+                Select Previous Cards
+              </DropdownButton>
+              <DropdownMenu show={showPreviousDropdown}>
+                <DropdownSelect multiple value={previousCards} onChange={handlePreviousCardChange}>
+                  {currentCards.map(card => (
+                    <option key={card._id} value={card._id}>{card.title}</option>
+                  ))}
+                </DropdownSelect>
+              </DropdownMenu>
+            </DropdownContainer>
           </FormLabel>
           <FormLabel>
             Next Cards:
-            <select multiple value={nextCards} onChange={(e) => setNextCards(Array.from(e.target.selectedOptions, option => option.value))}>
-              {currentCards.map(card => (
-                <option key={card._id} value={card._id}>{card.title}</option>
-              ))}
-            </select>
+            <DropdownContainer>
+              <DropdownButton type="button" onClick={toggleNextDropdown}>
+                Select Next Cards
+              </DropdownButton>
+              <DropdownMenu show={showNextDropdown}>
+                <DropdownSelect multiple value={nextCards} onChange={handleNextCardChange}>
+                  {currentCards.map(card => (
+                    <option key={card._id} value={card._id}>{card.title}</option>
+                  ))}
+                </DropdownSelect>
+              </DropdownMenu>
+            </DropdownContainer>
           </FormLabel>
           <FormLabel>
             Prompt:
-            <FormInput type="text" value={prompt} onChange={(e) => setPrompt(e.target.value)} required />
+            <FormTextArea value={prompt} onChange={(e) => setPrompt(e.target.value)} required></FormTextArea>
           </FormLabel>
           <FormLabel>
             Context:
