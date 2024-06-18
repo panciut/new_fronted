@@ -20,6 +20,7 @@ export const PopoverContainer = styled.div`
   width: 22%;
   height: 50vh;
   padding: 20px;
+  padding-bottom: 60px; /* Add padding to account for the button container */
   background: white;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -72,4 +73,29 @@ export const Label = styled.label`
 
 export const Value = styled.span`
   margin-left: 5px;
+`;
+
+export const ButtonContainer = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  background: white;
+`;
+
+export const ActionButton = styled.button`
+  padding: 8px 16px;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+
+  &:hover {
+    background-color: #21a1f1;
+  }
 `;

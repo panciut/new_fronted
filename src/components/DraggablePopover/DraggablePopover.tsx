@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
 import { fetchCardById } from '../../services/api';
-import { CloseButton, PopoverContent, PopoverContainer, Section, SectionTitle, SectionContent, Label, Value } from './DraggablePopover.styles';
+import { CloseButton, PopoverContent, PopoverContainer, Section, SectionTitle, SectionContent, Label, Value, ButtonContainer, ActionButton } from './DraggablePopover.styles';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -45,67 +45,77 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
       <PopoverContainer style={{ top: '25%', left: `${calculateLeftPosition(index)}%`, transform: 'translateX(-50%)' }}>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         {card && (
-          <PopoverContent>
-            <Section>
-              <Label>Title:</Label>
-              <Value>{card.title}</Value>
-            </Section>
-            <Section>
-              <Label>Objective:</Label>
-              <Value>{card.objective}</Value>
-            </Section>
-            <Section>
-              <Label>Status:</Label>
-              <Value>{card.executed ? 'Executed' : 'Not Executed'}</Value>
-            </Section>
-            <Section>
-              <Label>Evaluation:</Label>
-              <Value>{card.evaluated ? 'Evaluated' : 'Not Evaluated'}</Value>
-            </Section>
-
-            <Section>
-              <SectionTitle onClick={() => setIsInputCollapsed(!isInputCollapsed)}>
-                Inputs {isInputCollapsed ? '▼' : '▲'}
-              </SectionTitle>
-              <SectionContent isCollapsed={isInputCollapsed}>
-                {card.inputs.map((input: any, index: number) => (
-                  <div key={index}>
-                    <Label>Prompt:</Label>
-                    <Value>{input.prompt}</Value>
-                    <br />
-                    <Label>Context:</Label>
-                    <Value>{input.context}</Value>
-                  </div>
-                ))}
-              </SectionContent>
-            </Section>
-
-            {card.output && (
+          <>
+            <PopoverContent>
               <Section>
-                <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
-                  Outputs {isOutputCollapsed ? '▼' : '▲'}
+                <Label>Title:</Label>
+                <Value>{card.title}</Value>
+              </Section>
+              <Section>
+                <Label>Objective:</Label>
+                <Value>{card.objective}</Value>
+              </Section>
+              <Section>
+                <Label>Status:</Label>
+                <Value>{card.executed ? 'Executed' : 'Not Executed'}</Value>
+              </Section>
+              <Section>
+                <Label>Evaluation:</Label>
+                <Value>{card.evaluated ? 'Evaluated' : 'Not Evaluated'}</Value>
+              </Section>
+
+              <Section>
+                <SectionTitle onClick={() => setIsInputCollapsed(!isInputCollapsed)}>
+                  Inputs {isInputCollapsed ? '▼' : '▲'}
                 </SectionTitle>
-                <SectionContent isCollapsed={isOutputCollapsed}>
-                  <div>
-                    <Label>Generated Text:</Label>
-                    <Value>{card.output.generatedText}</Value>
-                  </div>
+                <SectionContent isCollapsed={isInputCollapsed}>
+                  {card.inputs.map((input: any, index: number) => (
+                    <div key={index}>
+                      <Label>Prompt:</Label>
+                      <Value>{input.prompt}</Value>
+                      <br />
+                      <Label>Context:</Label>
+                      <Value>{input.context}</Value>
+                    </div>
+                  ))}
                 </SectionContent>
               </Section>
-            )}
 
-            {card.output && (
-              <Section>
-                <h3>Evaluation Metrics</h3>
-                {card.output.evaluationMetrics.map((metric: any) => (
-                  <div key={metric._id}>
-                    <Label>{metric.evaluationDescription}:</Label>
-                    <Value>{metric.evaluationResult}</Value>
-                  </div>
-                ))}
-              </Section>
-            )}
-          </PopoverContent>
+              {card.output && (
+                <Section>
+                  <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
+                    Outputs {isOutputCollapsed ? '▼' : '▲'}
+                  </SectionTitle>
+                  <SectionContent isCollapsed={isOutputCollapsed}>
+                    <div>
+                      <Label>Generated Text:</Label>
+                      <Value>{card.output.generatedText}</Value>
+                    </div>
+                  </SectionContent>
+                </Section>
+              )}
+
+              {card.output && (
+                <Section>
+                  <h3>Evaluation Metrics</h3>
+                  {card.output.evaluationMetrics.map((metric: any) => (
+                    <div key={metric._id}>
+                      <Label>{metric.evaluationDescription}:</Label>
+                      <Value>{metric.evaluationResult}</Value>
+                    </div>
+                  ))}
+                </Section>
+              )}
+            </PopoverContent>
+            <ButtonContainer>
+              <ActionButton onClick={() => { /* Logic to execute later */ }}>
+                Execute
+              </ActionButton>
+              <ActionButton onClick={() => { /* Logic to evaluate later */ }}>
+                Evaluate
+              </ActionButton>
+            </ButtonContainer>
+          </>
         )}
       </PopoverContainer>
     </Draggable>
