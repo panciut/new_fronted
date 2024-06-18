@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchTaskById } from '../../services/api';
-import Card from '../../components/Card/Card';
+import Flow from '../../components/Flow/Flow';
+import { Node, Edge } from 'react-flow-renderer';
 
 const TaskDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,23 +35,44 @@ const TaskDetailPage: React.FC = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
+  const nodes: Node[] = task.cards.map((card: any, index: number) => ({
+    id: card._id,
+    data: { label: card.title },
+    position: { x: 100 * index, y: 100 }, // Adjust the positioning as needed
+    draggable: true,
+  }));
+
+  const edges: Edge[] = [];
+
+  task.cards.forEach((card: any) => {
+    // Create edges for nextCards
+    card.nextCards.forEach((nextCardId: string) => {
+      edges.push({
+        id: `e${card._id}-${nextCardId}`,
+        source: card._id,
+        target: nextCardId,
+        animated: true,
+        style: { stroke: '#000' },
+      });
+    });
+
+    // Create edges for previousCards
+    Object.keys(card.previousCards).forEach((prevCardId: string) => {
+      edges.push({
+        id: `e${prevCardId}-${card._id}`,
+        source: prevCardId,
+        target: card._id,
+        animated: true,
+        style: { stroke: '#000' },
+      });
+    });
+  });
+
   return (
     <div>
       <h1>{task.name}</h1>
       <p>{task.objective}</p>
-      <div className="card-container">
-        {task.cards.map((card: any) => (
-          <div key={card._id} onClick={() => navigate(`/card/${card._id}`)}>
-            <Card
-              title={card.title}
-              objective={card.objective}
-              hasOutput={!!card.output}
-              executed={card.executed}
-              evaluated={card.evaluated}
-            />
-          </div>
-        ))}
-      </div>
+      <Flow initialNodes={nodes} initialEdges={edges} />
     </div>
   );
 };
