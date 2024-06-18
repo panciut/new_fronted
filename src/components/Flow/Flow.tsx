@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
 import dagre from 'dagre';
+import { setNextCard, setPreviousCard } from '../../services/api';
 
 interface FlowProps {
   initialNodes: Node[];
@@ -19,7 +20,21 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback(async (params: Edge | Connection) => {
+    setEdges((eds) => addEdge(params, eds));
+
+    const { source, target } = params;
+
+    if (source && target) {
+      try {
+        // Call the backend API to link the cards as next and previous
+        await setNextCard(source, [target]);
+        await setPreviousCard(target, [source]);
+      } catch (error) {
+        console.error('Error setting card links:', error);
+      }
+    }
+  }, [setEdges]);
 
   useEffect(() => {
     // Layout nodes using dagre

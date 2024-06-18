@@ -52,3 +52,23 @@ export const createCard = async (card: any) => {
         throw error;
     }
 };
+
+export const setNextCard = async (currentCardId: string, nextCardIds: string[]) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/set-next/${currentCardId}`, { nextCardIds });
+        return response.data;
+    } catch (error) {
+        console.error('Error setting next card:', error);
+        throw error;
+    }
+};
+
+export const setPreviousCard = async (currentCardId: string, previousCardIds: string[]) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/set-previous/${currentCardId}`, { previousCardIds });
+        return response.data;
+    } catch (error) {
+        console.error('Error setting previous card:', error);
+        throw error;
+    }
+};
