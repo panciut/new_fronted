@@ -10,6 +10,12 @@ interface Input {
 interface Output {
     _id: string;
     generatedText: string;
+    evaluationMetrics: {
+        _id: string;
+        type: string;
+        evaluationDescription: string;
+        evaluationResult: number;
+    }[];
 }
 
 interface Card {
@@ -24,6 +30,8 @@ interface Card {
     status: string;
     createdAt: string;
     updatedAt: string;
+    executed: boolean;
+    evaluated: boolean; // Add this line to include the evaluated property
 }
 
 interface CardState {

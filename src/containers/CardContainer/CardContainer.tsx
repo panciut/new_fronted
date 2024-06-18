@@ -40,7 +40,9 @@ const CardContainer: React.FC = () => {
           key={card._id}
           title={card.title}
           objective={card.objective}
-          hasOutput={card.output && card.output.generatedText ? true : false}
+          hasOutput={!!card.output}
+          executed={card.executed}
+          evaluated={card.evaluated}
         />
       ))}
     </div>

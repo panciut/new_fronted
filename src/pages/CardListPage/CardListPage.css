@@ -1,0 +1,6 @@
+/* src/pages/CardListPage/CardListPage.css */
+.card-list-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
