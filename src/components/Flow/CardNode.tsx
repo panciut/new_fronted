@@ -10,9 +10,8 @@ interface CardNodeProps {
     id: string;
     title: string;
     executed: boolean;
-    evaluated: boolean;
     inconsistentState: boolean;
-    onExecute: (id: string) => void; // Ensure this line exists
+    onExecute: (id: string) => void;
   };
 }
 

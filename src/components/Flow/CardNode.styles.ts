@@ -20,7 +20,7 @@ export const CardTitle = styled.h2`
 export const StatusDot = styled.span<{ status: string }>`
   height: 20px;
   width: 20px;
-  background-color: ${({ status }) => (status === 'executed' || status === 'evaluated' ? 'green' : 'red')};
+  background-color: ${({ status }) => (status === 'executed' ? 'green' : 'red')};
   border-radius: 50%;
   border: 2px solid black; /* Added black stroke */
   display: inline-block;
@@ -34,7 +34,7 @@ export const StatusContainer = styled.div`
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+  width: 60px; /* Adjusted width for a single dot */
 `;
 
 export const ExecuteButton = styled.button`
@@ -82,7 +82,6 @@ export const ExecutionStatus = styled.span`
   display: flex;
   align-items: center;
 `;
-
 
 export const LoadingMessage = styled.p`
   margin: 0 10px; /* Add margin to center the loading message */

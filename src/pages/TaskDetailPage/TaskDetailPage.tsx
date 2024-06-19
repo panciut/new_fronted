@@ -117,6 +117,22 @@ const TaskDetailPage: React.FC = () => {
     }
   };
 
+  const handleCardUpdate = (updatedCard: any) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === updatedCard._id) {
+          node.data = {
+            ...node.data,
+            executed: updatedCard.executed,
+            evaluated: updatedCard.evaluated,
+            inconsistentState: updatedCard.inconsistentState,
+          };
+        }
+        return node;
+      })
+    );
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -134,7 +150,7 @@ const TaskDetailPage: React.FC = () => {
       </ContentContainer>
       <AddCardModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
       {openPopovers.map((cardId, index) => (
-        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} onExecute={handleExecute} />
+        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} onExecute={handleExecute} onCardUpdate={handleCardUpdate} />
       ))}
     </PageContainer>
   );

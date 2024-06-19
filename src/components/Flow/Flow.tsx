@@ -75,6 +75,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     setNodes(layoutedNodes);
   }, [initialNodes, initialEdges]);
 
+  
   return (
     <FlowContainer>
       <ReactFlow

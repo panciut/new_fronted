@@ -1,4 +1,5 @@
 // src/components/DraggablePopover/DraggablePopover.tsx
+
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
 import { fetchCardById, executeCard, evaluateCard } from '../../services/api';
@@ -23,14 +24,16 @@ interface DraggablePopoverProps {
   cardId: string;
   onRequestClose: () => void;
   index: number;
-  onExecute: (id: string) => void; // New prop to handle execution
+  onExecute: (id: string) => void;
+  onCardUpdate: (card: any) => void; // New prop to handle card updates
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   cardId,
   onRequestClose,
   index,
-  onExecute, // Receive the new prop
+  onExecute,
+  onCardUpdate, // Receive the new prop
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +74,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
       onExecute(cardId); // Notify the parent about the execution
+      onCardUpdate(updatedCard); // Notify the parent about the card update
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {
@@ -87,6 +91,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
       onExecute(cardId); // Notify the parent about the evaluation
+      onCardUpdate(updatedCard); // Notify the parent about the card update
     } catch (error) {
       console.error('Error evaluating card:', error);
     } finally {
