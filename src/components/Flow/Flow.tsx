@@ -9,8 +9,8 @@ import { FlowContainer } from './Flow.styles';
 interface FlowProps {
   initialNodes: Node[];
   initialEdges: Edge[];
-  onNodeClick: (event: React.MouseEvent, node: Node) => void; // Add onNodeClick prop
-  onExecute: (id: string) => void; // Add onExecute prop
+  onNodeClick: (event: React.MouseEvent, node: Node) => void;
+  onExecute: (id: string) => void;
 }
 
 const nodeWidth = 172;
@@ -68,7 +68,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
-      node.data = { ...node.data, onExecute }; // Pass onExecute callback to each node
+      node.data = { ...node.data, onExecute };
       return node;
     });
 
@@ -83,7 +83,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onNodeClick={onNodeClick} // Pass the onNodeClick handler to ReactFlow
+        onNodeClick={onNodeClick}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         defaultZoom={0.8}

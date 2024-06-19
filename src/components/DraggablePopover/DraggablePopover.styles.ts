@@ -82,6 +82,7 @@ export const ButtonContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-around;
+  align-items: center;
   padding: 10px 0;
   background: white;
 `;
@@ -107,6 +108,7 @@ export const ActionButton = styled.button.attrs<ActionButtonProps>(props => ({
   position: relative;
   pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
   opacity: ${props => (props.disabled ? 0.5 : 1)};
+  margin-bottom: 5px; /* Add margin to separate buttons */
 
   &:hover {
     background-color: ${props => props.hoverColor}; /* Dynamic hover color */
@@ -136,4 +138,10 @@ export const ActionButton = styled.button.attrs<ActionButtonProps>(props => ({
   &:hover::after {
     display: block;
   }
+`;
+
+export const LoadingMessage = styled.p`
+  margin: 0 10px; /* Add margin to center the loading message */
+  font-size: 14px;
+  color: #000;
 `;

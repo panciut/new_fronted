@@ -1,25 +1,37 @@
 // src/components/DraggablePopover/DraggablePopover.tsx
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import { fetchCardById, executeCard, evaluateCard } from '../../services/api'; // Import the evaluateCard function
-import { CloseButton, PopoverContent, PopoverContainer, Section, SectionTitle, SectionContent, Label, Value, ButtonContainer, ActionButton } from './DraggablePopover.styles';
+import { fetchCardById, executeCard, evaluateCard } from '../../services/api';
+import { 
+  CloseButton, 
+  PopoverContent, 
+  PopoverContainer, 
+  Section, 
+  SectionTitle, 
+  SectionContent, 
+  Label, 
+  Value, 
+  ButtonContainer, 
+  ActionButton, 
+  LoadingMessage 
+} from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
 
 interface DraggablePopoverProps {
   cardId: string;
   onRequestClose: () => void;
-  index: number; // Added index prop
+  index: number;
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestClose, index }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
-  const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
   const [isExecuting, setIsExecuting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
+  const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
 
   useEffect(() => {
     const getCard = async () => {
@@ -46,27 +58,31 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
 
   const handleExecute = async () => {
     setIsExecuting(true);
+    setIsEvaluating(true); // Disable both buttons
     try {
       await executeCard(cardId);
-      const updatedCard = await fetchCardById(cardId); // Fetch updated card data
+      const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {
       setIsExecuting(false);
+      setIsEvaluating(false); // Re-enable both buttons
     }
   };
 
   const handleEvaluate = async () => {
     setIsEvaluating(true);
+    setIsExecuting(true); // Disable both buttons
     try {
       await evaluateCard(cardId);
-      const updatedCard = await fetchCardById(cardId); // Fetch updated card data
+      const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
     } catch (error) {
       console.error('Error evaluating card:', error);
     } finally {
       setIsEvaluating(false);
+      setIsExecuting(false); // Re-enable both buttons
     }
   };
 
@@ -93,7 +109,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
                 <Label>Evaluation:</Label>
                 <Value>{card.evaluated ? 'Evaluated' : 'Not Evaluated'}</Value>
               </Section>
-
               <Section>
                 <SectionTitle onClick={() => setIsInputCollapsed(!isInputCollapsed)}>
                   Inputs {isInputCollapsed ? '▼' : '▲'}
@@ -110,7 +125,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
                   ))}
                 </SectionContent>
               </Section>
-
               {card.output && (
                 <Section>
                   <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
@@ -124,7 +138,6 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
                   </SectionContent>
                 </Section>
               )}
-
               {card.output && (
                 <Section>
                   <h3>Evaluation Metrics</h3>
@@ -146,17 +159,16 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
                 disabled={isExecuting}
               >
                 <img src={executeIcon} alt="Execute" />
-                {isExecuting && <span>Loading...</span>}
               </ActionButton>
+              {isExecuting || isEvaluating ? <LoadingMessage>Loading...</LoadingMessage> : <div style={{ width: '100px' }}></div>}
               <ActionButton
                 onClick={handleEvaluate}
                 color="yellow"
                 hoverColor="orange"
                 data-tooltip="Evaluate Card"
-                disabled={isEvaluating}
+                disabled={isEvaluating || !card.executed}
               >
                 <img src={evaluateIcon} alt="Evaluate" />
-                {isEvaluating && <span>Loading...</span>}
               </ActionButton>
             </ButtonContainer>
           </>

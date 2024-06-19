@@ -8,8 +8,8 @@ export const CardContainer = styled.div`
   border-radius: 8px;
   background-color: #fff;
   width: 200px;
-  height: 120px; /* Adjusted height */
-  position: relative; /* Added for positioning child elements */
+  height: 120px;
+  position: relative;
 `;
 
 export const CardTitle = styled.h2`
@@ -18,8 +18,8 @@ export const CardTitle = styled.h2`
 `;
 
 export const StatusDot = styled.span<{ status: string }>`
-  height: 20px; /* Increased size */
-  width: 20px; /* Increased size */
+  height: 20px;
+  width: 20px;
   background-color: ${({ status }) => (status === 'executed' || status === 'evaluated' ? 'green' : 'red')};
   border-radius: 50%;
   border: 2px solid black; /* Added black stroke */
@@ -29,37 +29,37 @@ export const StatusDot = styled.span<{ status: string }>`
 export const StatusContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Added for spacing */
+  justify-content: space-between;
   position: absolute;
-  bottom: 10px; /* Positioning at the bottom */
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px; /* Adjusted width for spacing */
+  width: 80px;
 `;
 
 export const ExecuteButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px;
-  background-color: green; /* Changed to green */
+  padding: 5px;
+  background-color: green;
   border: 2px solid black; /* Added black stroke */
   border-radius: 5px;
   cursor: pointer;
   position: relative;
 
   &:hover {
-    background-color: darkgreen; /* Darker green on hover */
+    background-color: darkgreen;
   }
 
   img {
-    filter: brightness(0); /* Change the image color to black */
+    filter: brightness(0);
     width: 20px;
     height: 20px;
   }
 
   &::after {
-    content: attr(data-tooltip); /* Use data-tooltip attribute for tooltip content */
+    content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -81,4 +81,11 @@ export const ExecuteButton = styled.button`
 export const ExecutionStatus = styled.span`
   display: flex;
   align-items: center;
+`;
+
+
+export const LoadingMessage = styled.p`
+  margin: 0 10px; /* Add margin to center the loading message */
+  font-size: 14px;
+  color: #000;
 `;

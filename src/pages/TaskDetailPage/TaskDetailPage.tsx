@@ -1,12 +1,12 @@
 // src/pages/TaskDetailPage/TaskDetailPage.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchTaskById, executeCard } from '../../services/api'; // Import the executeCard function
+import { fetchTaskById, executeCard } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
 import AddCardModal from '../../components/AddCardModal/AddCardModal';
 import { Node, Edge } from 'react-flow-renderer';
 import { Button, OptionsBar, TaskInfo, ContentContainer, PageContainer } from './TaskDetailPage.styles';
-import DraggablePopover from '../../components/DraggablePopover/DraggablePopover'; // Import the new component
+import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 
 const edgeOptions = {
   animated: true,
@@ -20,7 +20,7 @@ const TaskDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [openPopovers, setOpenPopovers] = useState<string[]>([]); // State for open popovers
+  const [openPopovers, setOpenPopovers] = useState<string[]>([]);
 
   const fetchTaskData = async () => {
     if (id) {
@@ -127,20 +127,9 @@ const TaskDetailPage: React.FC = () => {
       <ContentContainer>
         <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} /> {/* Pass the onExecute handler */}
       </ContentContainer>
-      <AddCardModal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        taskId={task._id}
-        currentCards={task.cards}
-        onCardCreated={handleCardCreated}
-      />
+      <AddCardModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
       {openPopovers.map((cardId, index) => (
-        <DraggablePopover
-          key={cardId}
-          cardId={cardId}
-          onRequestClose={() => handleClosePopover(cardId)}
-          index={index} // Pass the index to position the popovers
-        />
+        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} />
       ))}
     </PageContainer>
   );
