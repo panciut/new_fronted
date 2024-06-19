@@ -1,13 +1,15 @@
 // src/pages/TasksPage/TasksPage.tsx
 import React from 'react';
 import TaskContainer from '../../containers/TaskContainer/TaskContainer';
+import { TasksPageContainer, TaskItem, Title, Subtitle } from './TasksPage.styles';
 
 const TasksPage: React.FC = () => {
   return (
-    <div>
-      <h1>Tasks</h1>
+    <TasksPageContainer>
+      <Title>Tasks</Title>
+      <Subtitle>Select a task to view details</Subtitle>
       <TaskContainer />
-    </div>
+    </TasksPageContainer>
   );
 };
 
