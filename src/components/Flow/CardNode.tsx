@@ -12,7 +12,7 @@ interface CardNodeProps {
     executed: boolean;
     evaluated: boolean;
     inconsistentState: boolean;
-    onExecute: (id: string) => void;
+    onExecute: (id: string) => void; // Ensure this line exists
   };
 }
 
@@ -24,7 +24,7 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     setIsExecuting(true);
     try {
       await executeCard(data.id);
-      data.onExecute(data.id);
+      data.onExecute(data.id); // Notify the parent about the execution
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {

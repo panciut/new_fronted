@@ -20,13 +20,65 @@ const TaskDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [openPopovers, setOpenPopovers] = useState<string[]>([]);
+  const [openPopovers, setOpenPopovers] = useState<string[]>([]); // Allow multiple popovers but not duplicates
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
 
   const fetchTaskData = async () => {
     if (id) {
       try {
         const data = await fetchTaskById(id);
         setTask(data);
+
+        const newNodes = data.cards.map((card: any, index: number) => ({
+          id: card._id,
+          data: {
+            title: card.title,
+            executed: card.executed,
+            evaluated: card.evaluated,
+            inconsistentState: card.inconsistentState,
+            onExecute: handleExecute, // Pass the handleExecute function
+          },
+          position: { x: 200 * index, y: 100 },
+          type: 'cardNode',
+          draggable: true,
+        }));
+        setNodes(newNodes);
+
+        const newEdges: Edge[] = [];
+        data.cards.forEach((card: any) => {
+          if (Array.isArray(card.nextCards)) {
+            card.nextCards.forEach((nextCardId: string) => {
+              newEdges.push({
+                id: `e${card._id}-${nextCardId}`,
+                source: card._id,
+                target: nextCardId,
+                ...edgeOptions,
+              });
+            });
+          }
+
+          if (Array.isArray(card.previousCards)) {
+            card.previousCards.forEach((prevCardId: string) => {
+              newEdges.push({
+                id: `e${prevCardId}-${card._id}`,
+                source: prevCardId,
+                target: card._id,
+                ...edgeOptions,
+              });
+            });
+          } else if (typeof card.previousCards === 'object') {
+            Object.keys(card.previousCards).forEach((prevCardId: string) => {
+              newEdges.push({
+                id: `e${prevCardId}-${card._id}`,
+                source: prevCardId,
+                target: card._id,
+                ...edgeOptions,
+              });
+            });
+          }
+        });
+        setEdges(newEdges);
       } catch (err) {
         setError('Failed to fetch task. Please try again later.');
       } finally {
@@ -47,8 +99,10 @@ const TaskDetailPage: React.FC = () => {
   };
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    setOpenPopovers((prev) => [...prev, node.id]);
-  }, []);
+    if (!openPopovers.includes(node.id)) {
+      setOpenPopovers((prev) => [...prev, node.id]);
+    }
+  }, [openPopovers]);
 
   const handleClosePopover = (cardId: string) => {
     setOpenPopovers((prev) => prev.filter((id) => id !== cardId));
@@ -66,55 +120,6 @@ const TaskDetailPage: React.FC = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  const nodes: Node[] = task.cards.map((card: any, index: number) => ({
-    id: card._id,
-    data: {
-      title: card.title,
-      executed: card.executed,
-      evaluated: card.evaluated,
-      inconsistentState: card.inconsistentState,
-      onExecute: handleExecute, // Pass the handleExecute function
-    },
-    position: { x: 200 * index, y: 100 },
-    type: 'cardNode',
-    draggable: true,
-  }));
-
-  const edges: Edge[] = [];
-
-  task.cards.forEach((card: any) => {
-    if (Array.isArray(card.nextCards)) {
-      card.nextCards.forEach((nextCardId: string) => {
-        edges.push({
-          id: `e${card._id}-${nextCardId}`,
-          source: card._id,
-          target: nextCardId,
-          ...edgeOptions,
-        });
-      });
-    }
-
-    if (Array.isArray(card.previousCards)) {
-      card.previousCards.forEach((prevCardId: string) => {
-        edges.push({
-          id: `e${prevCardId}-${card._id}`,
-          source: prevCardId,
-          target: card._id,
-          ...edgeOptions,
-        });
-      });
-    } else if (typeof card.previousCards === 'object') {
-      Object.keys(card.previousCards).forEach((prevCardId: string) => {
-        edges.push({
-          id: `e${prevCardId}-${card._id}`,
-          source: prevCardId,
-          target: card._id,
-          ...edgeOptions,
-        });
-      });
-    }
-  });
-
   return (
     <PageContainer>
       <OptionsBar>
@@ -125,11 +130,11 @@ const TaskDetailPage: React.FC = () => {
         <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
       </OptionsBar>
       <ContentContainer>
-        <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} /> {/* Pass the onExecute handler */}
+        <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} />
       </ContentContainer>
       <AddCardModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
       {openPopovers.map((cardId, index) => (
-        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} />
+        <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} onExecute={handleExecute} />
       ))}
     </PageContainer>
   );

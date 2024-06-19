@@ -23,12 +23,14 @@ interface DraggablePopoverProps {
   cardId: string;
   onRequestClose: () => void;
   index: number;
+  onExecute: (id: string) => void; // New prop to handle execution
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   cardId,
   onRequestClose,
   index,
+  onExecute, // Receive the new prop
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -68,6 +70,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       await executeCard(cardId);
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
+      onExecute(cardId); // Notify the parent about the execution
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {
@@ -83,6 +86,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
       await evaluateCard(cardId);
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
+      onExecute(cardId); // Notify the parent about the evaluation
     } catch (error) {
       console.error('Error evaluating card:', error);
     } finally {
