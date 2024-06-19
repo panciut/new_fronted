@@ -33,9 +33,9 @@ const TaskDetailPage: React.FC = () => {
         const newNodes = data.cards.map((card: any, index: number) => ({
           id: card._id,
           data: {
+            id: card._id, // Ensure ID is passed here
             title: card.title,
             executed: card.executed,
-            evaluated: card.evaluated,
             inconsistentState: card.inconsistentState,
             onExecute: handleExecute, // Pass the handleExecute function
           },
@@ -110,7 +110,19 @@ const TaskDetailPage: React.FC = () => {
 
   const handleExecute = async (cardId: string) => {
     try {
-      await executeCard(cardId);
+      const updatedCard = await executeCard(cardId);
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === updatedCard._id) {
+            node.data = {
+              ...node.data,
+              executed: updatedCard.executed,
+              inconsistentState: updatedCard.inconsistentState,
+            };
+          }
+          return node;
+        })
+      );
       fetchTaskData(); // Refresh the task data to update the execution status
     } catch (error) {
       console.error('Error executing card:', error);
@@ -124,7 +136,6 @@ const TaskDetailPage: React.FC = () => {
           node.data = {
             ...node.data,
             executed: updatedCard.executed,
-            evaluated: updatedCard.evaluated,
             inconsistentState: updatedCard.inconsistentState,
           };
         }

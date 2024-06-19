@@ -24,17 +24,18 @@ export const StatusDot = styled.span<{ status: string }>`
   border-radius: 50%;
   border: 2px solid black; /* Added black stroke */
   display: inline-block;
+  margin-left: 8px; /* Add margin to separate from button */
 `;
 
 export const StatusContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   position: absolute;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px; /* Adjusted width for a single dot */
+  width: 100px; /* Adjusted width for better spacing */
 `;
 
 export const ExecuteButton = styled.button`
@@ -78,13 +79,9 @@ export const ExecuteButton = styled.button`
   }
 `;
 
-export const ExecutionStatus = styled.span`
-  display: flex;
-  align-items: center;
-`;
-
 export const LoadingMessage = styled.p`
-  margin: 0 10px; /* Add margin to center the loading message */
+  margin: 0 0 8px 0; /* Add margin to center the loading message */
   font-size: 14px;
   color: #000;
+  text-align: center; /* Center align the text */
 `;

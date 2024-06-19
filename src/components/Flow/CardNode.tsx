@@ -12,6 +12,7 @@ interface CardNodeProps {
     executed: boolean;
     inconsistentState: boolean;
     onExecute: (id: string) => void;
+    onUpdate: (updatedCard: any) => void; // Add this function to update the parent component
   };
 }
 
@@ -22,8 +23,8 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     event.stopPropagation(); // Prevent popover from opening
     setIsExecuting(true);
     try {
-      await executeCard(data.id);
-      data.onExecute(data.id); // Notify the parent about the execution
+      const updatedCard = await executeCard(data.id); // Ensure the ID is passed here
+      data.onUpdate(updatedCard); // Notify the parent about the update
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {
@@ -34,11 +35,11 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
   return (
     <CardContainer>
       <CardTitle>{data.title}</CardTitle>
+      {isExecuting && <LoadingMessage>Loading...</LoadingMessage>}
       <StatusContainer>
         <ExecuteButton onClick={handleExecute} data-tooltip="Execute Card" disabled={isExecuting}>
           <img src={executeIcon} alt="Execute" />
         </ExecuteButton>
-        {isExecuting ? <LoadingMessage>Loading...</LoadingMessage> : null}
         <StatusDot status={data.executed ? 'executed' : 'not-executed'} />
       </StatusContainer>
       <Handle type="target" position={Position.Left} />
