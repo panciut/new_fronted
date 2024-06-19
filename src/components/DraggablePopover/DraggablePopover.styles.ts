@@ -63,7 +63,7 @@ export const SectionContent = styled.div<SectionContentProps>`
   margin-top: 5px;
   max-height: 200px;
   overflow-y: auto;
-  display: ${props => (props.isCollapsed ? 'none' : 'block')};
+  display: ${(props) => (props.isCollapsed ? 'none' : 'block')};
 `;
 
 export const Label = styled.label`
@@ -87,31 +87,72 @@ export const ButtonContainer = styled.div`
   background: white;
 `;
 
-interface ActionButtonProps {
-  color: string;
-  hoverColor: string;
+interface ExecuteButtonProps {
   disabled?: boolean;
 }
 
-export const ActionButton = styled.button.attrs<ActionButtonProps>(props => ({
-  style: {
-    backgroundColor: props.color,
-    borderColor: props.color,
-  },
-})) <ActionButtonProps>`
+export const ExecuteButton = styled.button<ExecuteButtonProps>`
   padding: 8px 16px;
-  border: 2px solid black; /* Added black stroke */
+  border: 2px solid black;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
   color: #fff;
+  background-color: green;
   position: relative;
-  pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
-  opacity: ${props => (props.disabled ? 0.5 : 1)};
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   margin-bottom: 5px; /* Add margin to separate buttons */
 
   &:hover {
-    background-color: ${props => props.hoverColor}; /* Dynamic hover color */
+    background-color: darkgreen;
+  }
+
+  img {
+    filter: brightness(0); /* Change the image color to black */
+    width: 20px;
+    height: 20px;
+  }
+
+  &::after {
+    content: attr(data-tooltip); /* Use data-tooltip attribute for tooltip content */
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: none;
+    white-space: nowrap;
+  }
+
+  &:hover::after {
+    display: block;
+  }
+`;
+
+interface EvaluateButtonProps {
+  disabled?: boolean;
+}
+
+export const EvaluateButton = styled.button<EvaluateButtonProps>`
+  padding: 8px 16px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  background-color: yellow;
+  position: relative;
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  margin-bottom: 5px; /* Add margin to separate buttons */
+
+  &:hover {
+    background-color: orange;
   }
 
   img {

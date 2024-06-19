@@ -2,18 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
 import { fetchCardById, executeCard, evaluateCard } from '../../services/api';
-import { 
-  CloseButton, 
-  PopoverContent, 
-  PopoverContainer, 
-  Section, 
-  SectionTitle, 
-  SectionContent, 
-  Label, 
-  Value, 
-  ButtonContainer, 
-  ActionButton, 
-  LoadingMessage 
+import {
+  CloseButton,
+  PopoverContent,
+  PopoverContainer,
+  Section,
+  SectionTitle,
+  SectionContent,
+  Label,
+  Value,
+  ButtonContainer,
+  ExecuteButton,
+  EvaluateButton,
+  LoadingMessage,
 } from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
@@ -24,7 +25,11 @@ interface DraggablePopoverProps {
   index: number;
 }
 
-const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestClose, index }) => {
+const DraggablePopover: React.FC<DraggablePopoverProps> = ({
+  cardId,
+  onRequestClose,
+  index,
+}) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -88,7 +93,13 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
 
   return (
     <Draggable bounds="parent">
-      <PopoverContainer style={{ top: '25%', left: `${calculateLeftPosition(index)}%`, transform: 'translateX(-50%)' }}>
+      <PopoverContainer
+        style={{
+          top: '25%',
+          left: `${calculateLeftPosition(index)}%`,
+          transform: 'translateX(-50%)',
+        }}
+      >
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         {card && (
           <>
@@ -143,7 +154,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
                   <h3>Evaluation Metrics</h3>
                   {card.output.evaluationMetrics.map((metric: any) => (
                     <div key={metric._id}>
-                      <Label>{metric.evaluationDescription}:</Label>
+                      <Label>{metric.type}:</Label>
                       <Value>{metric.evaluationResult}</Value>
                     </div>
                   ))}
@@ -151,25 +162,25 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
               )}
             </PopoverContent>
             <ButtonContainer>
-              <ActionButton
+              <ExecuteButton
                 onClick={handleExecute}
-                color="green"
-                hoverColor="darkgreen"
                 data-tooltip="Execute Card"
                 disabled={isExecuting}
               >
                 <img src={executeIcon} alt="Execute" />
-              </ActionButton>
-              {isExecuting || isEvaluating ? <LoadingMessage>Loading...</LoadingMessage> : <div style={{ width: '100px' }}></div>}
-              <ActionButton
+              </ExecuteButton>
+              {isExecuting || isEvaluating ? (
+                <LoadingMessage>Loading...</LoadingMessage>
+              ) : (
+                <div style={{ width: '100px' }}></div>
+              )}
+              <EvaluateButton
                 onClick={handleEvaluate}
-                color="yellow"
-                hoverColor="orange"
                 data-tooltip="Evaluate Card"
                 disabled={isEvaluating || !card.executed}
               >
                 <img src={evaluateIcon} alt="Evaluate" />
-              </ActionButton>
+              </EvaluateButton>
             </ButtonContainer>
           </>
         )}
