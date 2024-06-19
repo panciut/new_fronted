@@ -33,15 +33,6 @@ export const fetchCardById = async (id: string) => {
     }
 };
 
-export const fetchCards = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/cards`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching cards:', error);
-        throw error;
-    }
-};
 
 export const createCard = async (card: any) => {
     try {
@@ -59,16 +50,6 @@ export const setNextCard = async (currentCardId: string, nextCardIds: string[]) 
         return response.data;
     } catch (error) {
         console.error('Error setting next card:', error);
-        throw error;
-    }
-};
-
-export const setPreviousCard = async (currentCardId: string, previousCardIds: string[]) => {
-    try {
-        const response = await axios.put(`${API_URL}/cards/set-previous/${currentCardId}`, { previousCardIds });
-        return response.data;
-    } catch (error) {
-        console.error('Error setting previous card:', error);
         throw error;
     }
 };

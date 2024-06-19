@@ -1,8 +1,8 @@
-// src/components/Flow/Flow.tsx
+// ./src/components/Flow/Flow.tsx
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
 import dagre from 'dagre';
-import { setNextCard, setPreviousCard } from '../../services/api';
+import { setNextCard } from '../../services/api';
 import CardNode from './CardNode';
 import { FlowContainer } from './Flow.styles';
 
@@ -43,7 +43,6 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     if (source && target) {
       try {
         await setNextCard(source, [target]);
-        await setPreviousCard(target, [source]);
       } catch (error) {
         console.error('Error setting card links:', error);
       }
@@ -75,7 +74,6 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
     setNodes(layoutedNodes);
   }, [initialNodes, initialEdges]);
 
-  
   return (
     <FlowContainer>
       <ReactFlow

@@ -1,4 +1,4 @@
-// src/pages/TaskDetailPage/TaskDetailPage.tsx
+// ./src/pages/TaskDetailPage/TaskDetailPage.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById, executeCard } from '../../services/api';
@@ -47,8 +47,8 @@ const TaskDetailPage: React.FC = () => {
 
         const newEdges: Edge[] = [];
         data.cards.forEach((card: any) => {
-          if (Array.isArray(card.nextCards)) {
-            card.nextCards.forEach((nextCardId: string) => {
+          if (typeof card.nextCards === 'object') {
+            Object.keys(card.nextCards).forEach((nextCardId: string) => {
               newEdges.push({
                 id: `e${card._id}-${nextCardId}`,
                 source: card._id,
@@ -58,16 +58,7 @@ const TaskDetailPage: React.FC = () => {
             });
           }
 
-          if (Array.isArray(card.previousCards)) {
-            card.previousCards.forEach((prevCardId: string) => {
-              newEdges.push({
-                id: `e${prevCardId}-${card._id}`,
-                source: prevCardId,
-                target: card._id,
-                ...edgeOptions,
-              });
-            });
-          } else if (typeof card.previousCards === 'object') {
+          if (typeof card.previousCards === 'object') {
             Object.keys(card.previousCards).forEach((prevCardId: string) => {
               newEdges.push({
                 id: `e${prevCardId}-${card._id}`,
