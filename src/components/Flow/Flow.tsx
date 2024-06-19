@@ -1,5 +1,4 @@
 // src/components/Flow/Flow.tsx
-
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
 import dagre from 'dagre';
@@ -11,6 +10,7 @@ interface FlowProps {
   initialNodes: Node[];
   initialEdges: Edge[];
   onNodeClick: (event: React.MouseEvent, node: Node) => void; // Add onNodeClick prop
+  onExecute: (id: string) => void; // Add onExecute prop
 }
 
 const nodeWidth = 172;
@@ -30,7 +30,7 @@ const nodeTypes = {
   cardNode: CardNode,
 };
 
-const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick }) => {
+const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, onExecute }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -68,6 +68,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick }) 
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
+      node.data = { ...node.data, onExecute }; // Pass onExecute callback to each node
       return node;
     });
 

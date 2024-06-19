@@ -1,8 +1,7 @@
 // src/pages/TaskDetailPage/TaskDetailPage.tsx
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchTaskById } from '../../services/api';
+import { fetchTaskById, executeCard } from '../../services/api'; // Import the executeCard function
 import Flow from '../../components/Flow/Flow';
 import AddCardModal from '../../components/AddCardModal/AddCardModal';
 import { Node, Edge } from 'react-flow-renderer';
@@ -55,6 +54,15 @@ const TaskDetailPage: React.FC = () => {
     setOpenPopovers((prev) => prev.filter((id) => id !== cardId));
   };
 
+  const handleExecute = async (cardId: string) => {
+    try {
+      await executeCard(cardId);
+      fetchTaskData(); // Refresh the task data to update the execution status
+    } catch (error) {
+      console.error('Error executing card:', error);
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -65,6 +73,7 @@ const TaskDetailPage: React.FC = () => {
       executed: card.executed,
       evaluated: card.evaluated,
       inconsistentState: card.inconsistentState,
+      onExecute: handleExecute, // Pass the handleExecute function
     },
     position: { x: 200 * index, y: 100 },
     type: 'cardNode',
@@ -116,7 +125,7 @@ const TaskDetailPage: React.FC = () => {
         <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
       </OptionsBar>
       <ContentContainer>
-        <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} /> {/* Pass the onNodeClick handler */}
+        <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} /> {/* Pass the onExecute handler */}
       </ContentContainer>
       <AddCardModal
         isOpen={isModalOpen}

@@ -56,7 +56,7 @@ export const SectionTitle = styled.div`
 `;
 
 interface SectionContentProps {
-    isCollapsed: boolean;
+  isCollapsed: boolean;
 }
 
 export const SectionContent = styled.div<SectionContentProps>`

@@ -72,3 +72,13 @@ export const setPreviousCard = async (currentCardId: string, previousCardIds: st
         throw error;
     }
 };
+
+export const executeCard = async (cardId: string) => {
+    try {
+        const response = await axios.post(`${API_URL}/cards/execute/${cardId}`, {});
+        return response.data;
+    } catch (error) {
+        console.error('Error executing card:', error);
+        throw error;
+    }
+};
