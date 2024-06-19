@@ -82,3 +82,13 @@ export const executeCard = async (cardId: string) => {
         throw error;
     }
 };
+
+export const evaluateCard = async (cardId: string) => {
+    try {
+        const response = await axios.post(`${API_URL}/cards/evaluate/${cardId}`, {});
+        return response.data;
+    } catch (error) {
+        console.error('Error evaluating card:', error);
+        throw error;
+    }
+};

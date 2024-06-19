@@ -1,8 +1,10 @@
 // src/components/DraggablePopover/DraggablePopover.tsx
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import { fetchCardById } from '../../services/api';
+import { fetchCardById, executeCard, evaluateCard } from '../../services/api'; // Import the evaluateCard function
 import { CloseButton, PopoverContent, PopoverContainer, Section, SectionTitle, SectionContent, Label, Value, ButtonContainer, ActionButton } from './DraggablePopover.styles';
+import executeIcon from '../../assets/execute.svg';
+import evaluateIcon from '../../assets/evaluate.svg';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -16,6 +18,8 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
   const [error, setError] = useState('');
   const [isInputCollapsed, setIsInputCollapsed] = useState(true);
   const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
   useEffect(() => {
     const getCard = async () => {
@@ -38,6 +42,32 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
   const calculateLeftPosition = (index: number) => {
     const position = (index * 25) % 100;
     return position < 75 ? position : 0;
+  };
+
+  const handleExecute = async () => {
+    setIsExecuting(true);
+    try {
+      await executeCard(cardId);
+      const updatedCard = await fetchCardById(cardId); // Fetch updated card data
+      setCard(updatedCard);
+    } catch (error) {
+      console.error('Error executing card:', error);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  const handleEvaluate = async () => {
+    setIsEvaluating(true);
+    try {
+      await evaluateCard(cardId);
+      const updatedCard = await fetchCardById(cardId); // Fetch updated card data
+      setCard(updatedCard);
+    } catch (error) {
+      console.error('Error evaluating card:', error);
+    } finally {
+      setIsEvaluating(false);
+    }
   };
 
   return (
@@ -108,11 +138,25 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({ cardId, onRequestCl
               )}
             </PopoverContent>
             <ButtonContainer>
-              <ActionButton onClick={() => { /* Logic to execute later */ }}>
-                Execute
+              <ActionButton
+                onClick={handleExecute}
+                color="green"
+                hoverColor="darkgreen"
+                data-tooltip="Execute Card"
+                disabled={isExecuting}
+              >
+                <img src={executeIcon} alt="Execute" />
+                {isExecuting && <span>Loading...</span>}
               </ActionButton>
-              <ActionButton onClick={() => { /* Logic to evaluate later */ }}>
-                Evaluate
+              <ActionButton
+                onClick={handleEvaluate}
+                color="yellow"
+                hoverColor="orange"
+                data-tooltip="Evaluate Card"
+                disabled={isEvaluating}
+              >
+                <img src={evaluateIcon} alt="Evaluate" />
+                {isEvaluating && <span>Loading...</span>}
               </ActionButton>
             </ButtonContainer>
           </>

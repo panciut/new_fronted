@@ -59,9 +59,9 @@ export const ExecuteButton = styled.button`
   }
 
   &::after {
-    content: 'Execute Card';
+    content: attr(data-tooltip); /* Use data-tooltip attribute for tooltip content */
     position: absolute;
-    bottom: -25px;
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     background-color: black;
@@ -70,6 +70,7 @@ export const ExecuteButton = styled.button`
     border-radius: 5px;
     font-size: 12px;
     display: none;
+    white-space: nowrap;
   }
 
   &:hover::after {

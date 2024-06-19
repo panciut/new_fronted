@@ -1,5 +1,5 @@
 // src/components/Flow/CardNode.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { CardContainer, CardTitle, StatusDot, ExecuteButton, StatusContainer } from './CardNode.styles';
 import executeIcon from '../../assets/execute.svg'; // Adjust the path as necessary
@@ -12,16 +12,22 @@ interface CardNodeProps {
     executed: boolean;
     evaluated: boolean;
     inconsistentState: boolean;
+    onExecute: (id: string) => void; // Add the onExecute prop
   };
 }
 
 const CardNode: React.FC<CardNodeProps> = ({ data }) => {
+  const [isExecuting, setIsExecuting] = useState(false);
+
   const handleExecute = async () => {
+    setIsExecuting(true);
     try {
       await executeCard(data.id);
-      // Handle success, e.g., update state or show notification
+      data.onExecute(data.id); // Trigger the onExecute callback
     } catch (error) {
       console.error('Error executing card:', error);
+    } finally {
+      setIsExecuting(false);
     }
   };
 
@@ -29,8 +35,13 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     <CardContainer>
       <CardTitle>{data.title}</CardTitle>
       <StatusContainer>
-        <ExecuteButton onClick={handleExecute}>
+        <ExecuteButton
+          onClick={handleExecute}
+          data-tooltip="Execute Card"
+          disabled={isExecuting}
+        >
           <img src={executeIcon} alt="Execute" />
+          {isExecuting && <span>Loading...</span>}
         </ExecuteButton>
         <StatusDot status={data.executed ? 'executed' : 'not-executed'} />
       </StatusContainer>

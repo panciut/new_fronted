@@ -86,16 +86,54 @@ export const ButtonContainer = styled.div`
   background: white;
 `;
 
-export const ActionButton = styled.button`
+interface ActionButtonProps {
+  color: string;
+  hoverColor: string;
+  disabled?: boolean;
+}
+
+export const ActionButton = styled.button.attrs<ActionButtonProps>(props => ({
+  style: {
+    backgroundColor: props.color,
+    borderColor: props.color,
+  },
+})) <ActionButtonProps>`
   padding: 8px 16px;
-  background-color: #61dafb;
-  border: none;
+  border: 2px solid black; /* Added black stroke */
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
   color: #fff;
+  position: relative;
+  pointer-events: ${props => (props.disabled ? 'none' : 'auto')};
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
 
   &:hover {
-    background-color: #21a1f1;
+    background-color: ${props => props.hoverColor}; /* Dynamic hover color */
+  }
+
+  img {
+    filter: brightness(0); /* Change the image color to black */
+    width: 20px;
+    height: 20px;
+  }
+
+  &::after {
+    content: attr(data-tooltip); /* Use data-tooltip attribute for tooltip content */
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: none;
+    white-space: nowrap;
+  }
+
+  &:hover::after {
+    display: block;
   }
 `;
