@@ -63,7 +63,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
 
   const calculateLeftPosition = (index: number) => {
     const position = (index * 25) % 100;
-    return position < 75 ? position : 0;
+    return position <= 75 ? position : 0;
   };
 
   const handleExecute = async () => {
