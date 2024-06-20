@@ -186,3 +186,29 @@ export const LoadingMessage = styled.p`
   font-size: 14px;
   color: #000;
 `;
+
+
+// New styled component for the edit button
+export const EditButton = styled.button`
+position: absolute;
+top: 10px;
+right: 50px; /* Adjust position as needed */
+background: orange; /* Orange background color */
+padding: 5px 10px;
+border: 2px solid black;
+border-radius: 5px;
+cursor: pointer;
+display: flex;
+align - items: center;
+
+  img {
+  width: 15px;
+  height: 15px;
+  margin - right: 3px;
+  filter: brightness(0); /* Change the image color to black */
+}
+
+  &:hover {
+  background: #ff8c00; /* Darker orange on hover */
+}
+`;

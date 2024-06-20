@@ -1,4 +1,5 @@
-// ./src/pages/TaskDetailPage/TaskDetailPage.tsx
+// src/pages/TaskDetailPage/TaskDetailPage.tsx
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById, executeCard } from '../../services/api';
@@ -39,6 +40,7 @@ const TaskDetailPage: React.FC = () => {
             inconsistentState: card.inconsistentState,
             onExecute: handleExecute, // Pass the handleExecute function
             onDelete: handleDelete, // Pass the handleDelete function
+            onCardUpdate: handleCardUpdate, // Pass the handleCardUpdate function
           },
           position: { x: 200 * index, y: 100 },
           type: 'cardNode',
@@ -127,6 +129,10 @@ const TaskDetailPage: React.FC = () => {
         if (node.id === updatedCard._id) {
           node.data = {
             ...node.data,
+            title: updatedCard.title,
+            objective: updatedCard.objective,
+            prompt: updatedCard.prompt,
+            context: updatedCard.context,
             executed: updatedCard.executed,
             inconsistentState: updatedCard.inconsistentState,
           };

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import { fetchCardById, fetchPreviousCardsOutputs, executeCard, evaluateCard } from '../../services/api';
+import { fetchCardById, fetchPreviousCardsOutputs, executeCard, evaluateCard, updateCard } from '../../services/api';
 import {
   CloseButton,
   PopoverContent,
@@ -16,9 +16,12 @@ import {
   ExecuteButton,
   EvaluateButton,
   LoadingMessage,
+  EditButton
 } from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
+import editIcon from '../../assets/edit.svg';
+import doneIcon from '../../assets/done.svg';
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -40,16 +43,19 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [error, setError] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
-  const [isContextCollapsed, setIsContextCollapsed] = useState(true);
+  const [isPromptCollapsed, setIsPromptCollapsed] = useState(false); // Default to open
+  const [isContextCollapsed, setIsContextCollapsed] = useState(true); // Default to open
   const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
   const [previousCardsOutputs, setPreviousCardsOutputs] = useState<{ [key: string]: string | null }>({});
+  const [isEditing, setIsEditing] = useState(false); // State to track editing mode
+  const [updatedCard, setUpdatedCard] = useState<any>({}); // State to track updated card details
 
   useEffect(() => {
     const getCard = async () => {
       try {
         const data = await fetchCardById(cardId);
         setCard(data);
+        setUpdatedCard(data); // Initialize updated card state
       } catch (err) {
         setError('Failed to fetch card. Please try again later.');
       } finally {
@@ -79,7 +85,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   if (error) return <p>{error}</p>;
 
   const calculateLeftPosition = (index: number) => {
-    const position = (index * 33 +2) % 100;
+    const position = (index * 33 + 2) % 100;
     return position <= 75 ? position : 0;
   };
 
@@ -117,6 +123,27 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     }
   };
 
+  const handleEditClick = async () => {
+    if (isEditing) {
+      // If currently editing, save the changes
+      try {
+        await updateCard(updatedCard);
+        setCard(updatedCard);
+        onCardUpdate(updatedCard); // Notify the parent about the card update
+      } catch (error) {
+        console.error('Error updating card:', error);
+      }
+    }
+    setIsEditing(!isEditing);
+    setIsContextCollapsed(false);
+    setIsPromptCollapsed(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setUpdatedCard((prev: any) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <Draggable bounds="parent">
       <PopoverContainer
@@ -127,16 +154,37 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
         }}
       >
         <CloseButton onClick={onRequestClose}>×</CloseButton>
+        <EditButton onClick={handleEditClick}>
+          <img src={isEditing ? doneIcon : editIcon} alt="Edit" />
+        </EditButton>
         {card && (
           <>
             <PopoverContent>
               <Section>
                 <Label>Title:</Label>
-                <Value>{card.title}</Value>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="title"
+                    value={updatedCard.title}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <Value>{card.title}</Value>
+                )}
               </Section>
               <Section>
                 <Label>Objective:</Label>
-                <Value>{card.objective}</Value>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="objective"
+                    value={updatedCard.objective}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <Value>{card.objective}</Value>
+                )}
               </Section>
               <Section>
                 <SectionTitle onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}>
@@ -145,7 +193,15 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                 <SectionContent isCollapsed={isPromptCollapsed}>
                   <div>
                     <Label>Prompt:</Label>
-                    <Value>{card.prompt}</Value>
+                    {isEditing ? (
+                      <textarea
+                        name="prompt"
+                        value={updatedCard.prompt}
+                        onChange={handleChange}
+                      ></textarea>
+                    ) : (
+                      <Value>{card.prompt}</Value>
+                    )}
                   </div>
                 </SectionContent>
               </Section>
@@ -156,9 +212,17 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                 <SectionContent isCollapsed={isContextCollapsed}>
                   <div>
                     <Label>Context:</Label>
-                    <Value>{card.context}</Value>
+                    {isEditing ? (
+                      <textarea
+                        name="context"
+                        value={updatedCard.context}
+                        onChange={handleChange}
+                      ></textarea>
+                    ) : (
+                      <Value>{card.context}</Value>
+                    )}
                   </div>
-                  {card.previousCards && Object.keys(card.previousCards).length > 0 && (
+                  {card.previousCards && Object.keys(card.previousCards).length > 0 && !isEditing && (
                     <div>
                       <Label>Previous Cards Outputs:</Label>
                       {Object.entries(previousCardsOutputs).map(([prevCardId, output]) => (
