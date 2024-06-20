@@ -1,7 +1,7 @@
 // src/pages/TasksPage/TasksPage.tsx
 import React from 'react';
 import TaskContainer from '../../containers/TaskContainer/TaskContainer';
-import { TasksPageContainer, TaskItem, Title, Subtitle } from './TasksPage.styles';
+import { TasksPageContainer, Title, Subtitle } from './TasksPage.styles';
 
 const TasksPage: React.FC = () => {
   return (

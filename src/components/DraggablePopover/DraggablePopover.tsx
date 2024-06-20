@@ -79,7 +79,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   if (error) return <p>{error}</p>;
 
   const calculateLeftPosition = (index: number) => {
-    const position = (index * 25) % 100;
+    const position = (index * 33 +2) % 100;
     return position <= 75 ? position : 0;
   };
 

@@ -92,3 +92,12 @@ export const deleteCard = async (cardId: string) => {
         throw error;
     }
 };
+export const updateCard = async (card: any) => {
+    try {
+        const response = await axios.put(`${API_URL}/cards/${card._id}`, card);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating card:', error);
+        throw error;
+    }
+};

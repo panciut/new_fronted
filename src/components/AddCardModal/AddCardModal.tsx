@@ -8,10 +8,6 @@ import {
   FormTextArea,
   FormButton,
   CloseButton,
-  DropdownSelect,
-  DropdownButton,
-  DropdownContainer,
-  DropdownMenu,
   modalStyles,
 } from './AddCardModal.styles';
 import { createCard } from '../../services/api'; // Import the API function
@@ -28,18 +24,13 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   isOpen,
   onRequestClose,
   taskId,
-  currentCards,
   onCardCreated,
 }) => {
   const [title, setTitle] = useState('');
   const [objective, setObjective] = useState('');
-  const [previousCards, setPreviousCards] = useState<string[]>([]);
-  const [nextCards, setNextCards] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
   const [generativeModel, setGenerativeModel] = useState('gpt35Turbo'); // Set default value
-  const [showPreviousDropdown, setShowPreviousDropdown] = useState(false);
-  const [showNextDropdown, setShowNextDropdown] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -48,8 +39,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       title,
       objective,
       generativeModel,
-      previousCards,
-      nextCards,
       prompt,
       context,
       taskId,
@@ -62,22 +51,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     } catch (error) {
       console.error('Error creating card:', error);
     }
-  };
-
-  const togglePreviousDropdown = () => {
-    setShowPreviousDropdown(!showPreviousDropdown);
-  };
-
-  const toggleNextDropdown = () => {
-    setShowNextDropdown(!showNextDropdown);
-  };
-
-  const handlePreviousCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPreviousCards(Array.from(e.target.selectedOptions, (option) => option.value));
-  };
-
-  const handleNextCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNextCards(Array.from(e.target.selectedOptions, (option) => option.value));
   };
 
   return (
@@ -100,40 +73,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
               <option value="gpt35Turbo">gpt35Turbo</option>
               {/* Future options can be added here */}
             </FormInput>
-          </FormLabel>
-          <FormLabel>
-            Previous Cards:
-            <DropdownContainer>
-              <DropdownButton type="button" onClick={togglePreviousDropdown}>
-                Select Previous Cards
-              </DropdownButton>
-              <DropdownMenu show={showPreviousDropdown}>
-                <DropdownSelect multiple value={previousCards} onChange={handlePreviousCardChange}>
-                  {currentCards.map((card) => (
-                    <option key={card._id} value={card._id}>
-                      {card.title}
-                    </option>
-                  ))}
-                </DropdownSelect>
-              </DropdownMenu>
-            </DropdownContainer>
-          </FormLabel>
-          <FormLabel>
-            Next Cards:
-            <DropdownContainer>
-              <DropdownButton type="button" onClick={toggleNextDropdown}>
-                Select Next Cards
-              </DropdownButton>
-              <DropdownMenu show={showNextDropdown}>
-                <DropdownSelect multiple value={nextCards} onChange={handleNextCardChange}>
-                  {currentCards.map((card) => (
-                    <option key={card._id} value={card._id}>
-                      {card.title}
-                    </option>
-                  ))}
-                </DropdownSelect>
-              </DropdownMenu>
-            </DropdownContainer>
           </FormLabel>
           <FormLabel>
             Prompt:
