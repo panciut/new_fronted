@@ -31,6 +31,7 @@ export const TaskInfoContainer = styled.div`
   box-sizing: border-box;
   position: absolute;
   top: 60px; /* Position it below the OptionsBar */
+  z-index: 1; /* Ensure it is above the Flow component */
 `;
 
 export const TaskInfoBox = styled.div`
@@ -41,6 +42,8 @@ export const TaskInfoBox = styled.div`
   width: 25%; /* Make it narrower */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  z-index: 1; /* Ensure it is above the Flow component */
+  background-color: rgba(255, 255, 255, 0.9); /* Add background color */
 `;
 
 export const TaskInfo = styled.div`
@@ -73,6 +76,8 @@ export const ButtonsBox = styled.div`
   width: auto; /* Adjust width as needed */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+  z-index: 2; /* Ensure it is above the TaskInfoBox and Flow component */
+  background-color: rgba(255, 255, 255, 0.9); /* Add background color */
 `;
 
 export const RoundButton = styled.button`
@@ -101,4 +106,5 @@ export const ContentContainer = styled.div`
   height: calc(100vh - 60px); /* Adjust based on the height of the OptionsBar */
   box-sizing: border-box;
   margin-top: 20px; /* Ensure it doesn't overlap with the TaskInfoContainer */
+  z-index: 0; /* Ensure it is below the TaskInfoContainer and ButtonsBox */
 `;
