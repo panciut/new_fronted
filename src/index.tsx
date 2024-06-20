@@ -1,9 +1,9 @@
 // src/index.tsx
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import store from './redux/store';
 import App from './App';
+import './index.css'; // Import the index.css file
 
 const container = document.getElementById('root');
 
@@ -11,9 +11,9 @@ if (container) {
   const root = ReactDOM.createRoot(container);
 
   root.render(
-    <Provider store={store}>
+    <React.StrictMode>
       <App />
-    </Provider>
+    </React.StrictMode>
   );
 } else {
   console.error('Root container missing in index.html');

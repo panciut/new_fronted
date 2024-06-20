@@ -1,12 +1,12 @@
 // src/pages/TaskDetailPage/TaskDetailPage.tsx
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById, executeCard } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
 import AddCardModal from '../../components/AddCardModal/AddCardModal';
+import Navbar from '../../components/Navbar/Navbar';
 import { Node, Edge } from 'react-flow-renderer';
-import { Button, OptionsBar, TaskInfo, ContentContainer, PageContainer } from './TaskDetailPage.styles';
+import { OptionsBar, TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
 import DraggablePopover from '../../components/DraggablePopover/DraggablePopover';
 
 const edgeOptions = {
@@ -147,13 +147,18 @@ const TaskDetailPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <OptionsBar>
-        <TaskInfo>
-          <h1>{task.name}</h1>
-          <p>{task.objective}</p>
-        </TaskInfo>
-        <Button onClick={() => setIsModalOpen(true)}>Add Card</Button>
-      </OptionsBar>
+      <Navbar />
+      <TaskInfoContainer>
+        <TaskInfoBox>
+          <TaskInfo>
+            <h1>{task.name}</h1>
+            <p>{task.objective}</p>
+          </TaskInfo>
+        </TaskInfoBox>
+        <ButtonsBox>
+          <RoundButton onClick={() => setIsModalOpen(true)}>+</RoundButton>
+        </ButtonsBox>
+      </TaskInfoContainer>
       <ContentContainer>
         <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} />
       </ContentContainer>
