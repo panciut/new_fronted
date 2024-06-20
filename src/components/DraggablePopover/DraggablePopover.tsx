@@ -17,7 +17,8 @@ import {
   EvaluateButton,
   LoadingMessage,
   EditButton,
-  ResolveButton // Add ResolveButton import
+  ResolveButton, // Add ResolveButton import
+  TitleBand
 } from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
@@ -165,6 +166,7 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
           transform: 'translateX(-50%)',
         }}
       >
+        <TitleBand>Create New Card</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <ResolveButton onClick={handleResolveInconsistency}>
           <img src={reviewIcon} alt="Resolve" />

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
 export const CardContainer = styled.div`
-  border: 1px solid #ddd;
   padding: 16px 0 16px 16px; /* Adjust padding to fit the title band */
-  background-color: green;
   border-color: black;
   margin: 16px;
   border-radius: 10px;

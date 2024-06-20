@@ -1,6 +1,6 @@
-// src/components/AddCardModal/AddCardModal.tsx
+// src/components/AddCardPopover/AddCardPopover.tsx
 import React, { useState } from 'react';
-import Modal from 'react-modal';
+import Draggable from 'react-draggable';
 import {
   FormContainer,
   FormLabel,
@@ -8,11 +8,11 @@ import {
   FormTextArea,
   FormButton,
   CloseButton,
-  modalStyles,
-} from './AddCardModal.styles';
+  TitleBand,
+} from './AddCardPopover.styles';
 import { createCard } from '../../services/api';
 
-interface AddCardModalProps {
+interface AddCardPopoverProps {
   isOpen: boolean;
   onRequestClose: () => void;
   taskId: string;
@@ -20,7 +20,7 @@ interface AddCardModalProps {
   onCardCreated: () => void;
 }
 
-const AddCardModal: React.FC<AddCardModalProps> = ({
+const AddCardPopover: React.FC<AddCardPopoverProps> = ({
   isOpen,
   onRequestClose,
   taskId,
@@ -53,11 +53,15 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     }
   };
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Add Card" style={modalStyles}>
-      <FormContainer>
+    <Draggable bounds="parent">
+      <FormContainer style={{ top: '10%', left: '10%' }}>
+        <TitleBand>Create New Card</TitleBand>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
-        <h2>Create New Card</h2>
         <form onSubmit={handleSubmit}>
           <FormLabel>
             Title:
@@ -80,13 +84,13 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
           </FormLabel>
           <FormLabel>
             Context:
-            <FormTextArea value={context} onChange={(e) => setContext(e.target.value)} required></FormTextArea>
+            <FormTextArea value={context} onChange={(e) => setContext(e.target.value)}></FormTextArea>
           </FormLabel>
           <FormButton type="submit">Create Card</FormButton>
         </form>
       </FormContainer>
-    </Modal>
+    </Draggable>
   );
 };
 
-export default AddCardModal;
+export default AddCardPopover;

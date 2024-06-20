@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchTaskById, executeCard } from '../../services/api';
 import Flow from '../../components/Flow/Flow';
-import AddCardModal from '../../components/AddCardModal/AddCardModal';
+import AddCardPopover from '../../components/AddCardPopover/AddCardPopover';
 import Navbar from '../../components/Navbar/Navbar';
 import { Node, Edge } from 'react-flow-renderer';
 import { OptionsBar, TaskInfoContainer, TaskInfoBox, TaskInfo, ButtonsBox, RoundButton, ContentContainer, PageContainer } from './TaskDetailPage.styles';
@@ -20,7 +20,7 @@ const TaskDetailPage: React.FC = () => {
   const [task, setTask] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [openPopovers, setOpenPopovers] = useState<string[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -156,13 +156,13 @@ const TaskDetailPage: React.FC = () => {
           </TaskInfo>
         </TaskInfoBox>
         <ButtonsBox>
-          <RoundButton onClick={() => setIsModalOpen(true)}>+</RoundButton>
+          <RoundButton onClick={() => setIsPopoverOpen(true)}>+</RoundButton>
         </ButtonsBox>
       </TaskInfoContainer>
       <ContentContainer>
         <Flow initialNodes={nodes} initialEdges={edges} onNodeClick={handleNodeClick} onExecute={handleExecute} />
       </ContentContainer>
-      <AddCardModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
+      <AddCardPopover isOpen={isPopoverOpen} onRequestClose={() => setIsPopoverOpen(false)} taskId={task._id} currentCards={task.cards} onCardCreated={handleCardCreated} />
       {openPopovers.map((cardId, index) => (
         <DraggablePopover key={cardId} cardId={cardId} onRequestClose={() => handleClosePopover(cardId)} index={index} onExecute={handleExecute} onCardUpdate={handleCardUpdate} />
       ))}

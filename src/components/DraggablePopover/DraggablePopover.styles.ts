@@ -19,14 +19,15 @@ export const PopoverContainer = styled.div`
   position: absolute;
   width: 28%;
   height: 50vh;
-  padding: 20px;
-  padding-bottom: 60px; /* Add padding to account for the button container */
+  padding: 100px 20px 20px 20px; /* Add padding at the top to account for the title bar */
   background: white;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   overflow: hidden;
+  border: 2px solid #333; /* Optional: border for better visibility */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
 `;
 
 export const PopoverContent = styled.div`
@@ -187,35 +188,11 @@ export const LoadingMessage = styled.p`
   color: #000;
 `;
 
-
 // New styled component for the edit button
 export const EditButton = styled.button`
-position: absolute;
-top: 10px;
-right: 50px; /* Adjust position as needed */
-background: orange; /* Orange background color */
-padding: 5px 10px;
-border: 2px solid black;
-border-radius: 5px;
-cursor: pointer;
-display: flex;
-align - items: center;
-
-  img {
-  width: 15px;
-  height: 15px;
-  margin - right: 3px;
-  filter: brightness(0); /* Change the image color to black */
-}
-
-  &:hover {
-  background: #ff8c00; /* Darker orange on hover */
-}
-`;
-export const ResolveButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 90px; /* Adjust position to the left of the edit button */
+  top: 60px; /* Adjust position to align under the title bar */
+  right: 10px; /* Adjust position as needed */
   background: orange; /* Orange background color */
   padding: 5px 10px;
   border: 2px solid black;
@@ -234,4 +211,45 @@ export const ResolveButton = styled.button`
   &:hover {
     background: #ff8c00; /* Darker orange on hover */
   }
+`;
+
+export const ResolveButton = styled.button`
+  position: absolute;
+  top: 60px; /* Adjust position to align under the title bar */
+  right: 60px; /* Adjust position to the left of the edit button */
+  background: orange; /* Orange background color */
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    filter: brightness(0); /* Change the image color to black */
+  }
+
+  &:hover {
+    background: #ff8c00; /* Darker orange on hover */
+  }
+`;
+
+export const TitleBand = styled.div`
+  background-color: #faa419;
+  width: 100%;
+  height: 40px; /* Adjust height if needed */
+  padding: 8px 0;
+  border-bottom: 2px solid black;
+  border-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 40px; /* Center align text vertically */
 `;

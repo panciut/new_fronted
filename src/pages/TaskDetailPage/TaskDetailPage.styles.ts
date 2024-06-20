@@ -91,7 +91,7 @@ export const RoundButton = styled.button`
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: #fff;
+  color: black;
 
   &:hover {
     background-color: #e08e0b;

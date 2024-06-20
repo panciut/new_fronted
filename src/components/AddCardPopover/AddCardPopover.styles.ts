@@ -1,14 +1,16 @@
-// src/components/AddCardModal/AddCardModal.styles.ts
 import styled from 'styled-components';
 
 export const FormContainer = styled.div`
-  position: relative;
-  padding: 20px;
+  position: absolute;
+  width: 30%;
+  padding: 60px 20px 20px 20px; /* Add padding at the top to account for the title bar */
   background: #fff;
-  height: calc(100vh - 40px); /* Full height with padding */
   box-sizing: border-box;
   overflow-y: auto;
   z-index: 1001; /* Higher z-index to ensure it's on top of the flow */
+  border: 2px solid #333; /* Optional: border for better visibility */
+  border-radius: 10px; /* Optional: rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
 `;
 
 export const FormLabel = styled.label`
@@ -29,19 +31,22 @@ export const FormTextArea = styled.textarea`
   padding: 8px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  resize: none; /* Make text areas non-resizable */
 `;
 
 export const FormButton = styled.button`
   padding: 10px 20px;
-  background-color: #61dafb;
-  border: none;
+  background-color: #faa419; /* Orange background color */
+  border: 2px solid black; /* Black border */
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  color: #fff;
+  color: #000;
+  margin: 0 auto; /* Center align the button */
+  display: block; /* Ensure the button takes only the necessary space */
 
   &:hover {
-    background-color: #21a1f1;
+    background-color: #e08e0b; /* Darker orange on hover */
   }
 `;
 
@@ -104,18 +109,19 @@ export const DropdownMenu = styled.div<DropdownMenuProps>`
   display: ${props => (props.show ? 'block' : 'none')};
 `;
 
-export const modalStyles = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    zIndex: 1000, // Ensure overlay is on top
-  },
-  content: {
-    top: '10px',
-    right: '10px',
-    bottom: '10px',
-    left: 'auto',
-    width: '30%', // Takes one-third of the page width
-    padding: '20px',
-    zIndex: 1001, // Ensure modal content is on top
-  },
-};
+export const TitleBand = styled.div`
+  background-color: #faa419;
+  width: 100%;
+  height: 40px; /* Adjust height if needed */
+  padding: 8px 0;
+  border-bottom: 2px solid black;
+  border-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 40px; /* Center align text vertically */
+`;
