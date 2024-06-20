@@ -37,7 +37,7 @@ const TaskDetailPage: React.FC = () => {
             id: card._id,
             title: card.title,
             executed: card.executed,
-            inconsistentState: card.inconsistentState,
+            inconsistent: card.inconsistent,
             onExecute: handleExecute,
             onDelete: handleDelete,
             onCardUpdate: handleCardUpdate,
@@ -106,7 +106,7 @@ const TaskDetailPage: React.FC = () => {
             node.data = {
               ...node.data,
               executed: updatedCard.executed,
-              inconsistentState: updatedCard.inconsistentState,
+              inconsistent: updatedCard.inconsistent,
             };
           }
           return node;
@@ -129,7 +129,7 @@ const TaskDetailPage: React.FC = () => {
             prompt: updatedCard.prompt,
             context: updatedCard.context,
             executed: updatedCard.executed,
-            inconsistentState: updatedCard.inconsistentState,
+            inconsistent: updatedCard.inconsistent,
           };
         }
         return node;

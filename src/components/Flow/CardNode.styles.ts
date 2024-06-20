@@ -1,5 +1,3 @@
-// src/components/Flow/CardNode.styles.ts
-
 import styled from 'styled-components';
 
 export const CardContainer = styled.div`
@@ -116,4 +114,16 @@ export const CloseButton = styled.button`
   &:hover {
     color: red;
   }
+`;
+
+export const WarningIcon = styled.img`
+  position: absolute;
+  border: 2px solid black;
+  border-radius: 5px;
+  top: 4px;
+  left: 6px;
+  width: 24px;
+  height: 24px;
+  filter: brightness(0); /* Change the image color to black */
+
 `;

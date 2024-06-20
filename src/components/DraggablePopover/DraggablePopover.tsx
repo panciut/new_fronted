@@ -16,12 +16,14 @@ import {
   ExecuteButton,
   EvaluateButton,
   LoadingMessage,
-  EditButton
+  EditButton,
+  ResolveButton // Add ResolveButton import
 } from './DraggablePopover.styles';
 import executeIcon from '../../assets/execute.svg';
 import evaluateIcon from '../../assets/evaluate.svg';
 import editIcon from '../../assets/edit.svg';
 import doneIcon from '../../assets/done.svg';
+import reviewIcon from '../../assets/review.svg'; // Import the review icon
 
 interface DraggablePopoverProps {
   cardId: string;
@@ -143,6 +145,17 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
     setUpdatedCard((prev: any) => ({ ...prev, [name]: value }));
   };
 
+  const handleResolveInconsistency = async () => {
+    try {
+      const resolvedCard = { ...updatedCard, inconsistent: false };
+      await updateCard(resolvedCard);
+      setCard(resolvedCard);
+      onCardUpdate(resolvedCard);
+    } catch (error) {
+      console.error('Error resolving inconsistency:', error);
+    }
+  };
+
   return (
     <Draggable bounds="parent">
       <PopoverContainer
@@ -153,6 +166,9 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
         }}
       >
         <CloseButton onClick={onRequestClose}>×</CloseButton>
+        <ResolveButton onClick={handleResolveInconsistency}>
+          <img src={reviewIcon} alt="Resolve" />
+        </ResolveButton>
         <EditButton onClick={handleEditClick}>
           <img src={isEditing ? doneIcon : editIcon} alt="Edit" />
         </EditButton>

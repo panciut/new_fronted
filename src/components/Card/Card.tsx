@@ -1,17 +1,17 @@
 // src/components/Card/Card.tsx
 
 import React from 'react';
-import { CardContainer, CardTitle, StatusDot, InconsistentStateMessage } from './Card.styles';
+import { CardContainer, CardTitle, StatusDot, InconsistentMessage } from './Card.styles';
 
 interface CardProps {
   title: string;
   objective: string;
   executed: boolean;
   evaluated: boolean;
-  inconsistentState: boolean;
+  inconsistent: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ title, objective, executed, evaluated, inconsistentState }) => {
+const Card: React.FC<CardProps> = ({ title, objective, executed, evaluated, inconsistent }) => {
   return (
     <CardContainer>
       <CardTitle>{title}</CardTitle>
@@ -22,7 +22,7 @@ const Card: React.FC<CardProps> = ({ title, objective, executed, evaluated, inco
         <span>Executed</span>
         <StatusDot status={evaluated ? 'evaluated' : 'not-evaluated'} />
         <span>Evaluated</span>
-        {inconsistentState && <InconsistentStateMessage>Inconsistent State</InconsistentStateMessage>}
+        {inconsistent && <InconsistentMessage>Inconsistent</InconsistentMessage>}
       </div>
     </CardContainer>
   );

@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { CardContainer, TitleBand, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton } from './CardNode.styles';
+import { CardContainer, TitleBand, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton, WarningIcon } from './CardNode.styles';
 import executeIcon from '../../assets/execute.svg';
+import warningIcon from '../../assets/warning.svg'; // Import warning icon
 import { executeCard, deleteCard } from '../../services/api'; // Import deleteCard API
 
 interface CardNodeProps {
@@ -11,7 +12,7 @@ interface CardNodeProps {
     id: string;
     title: string;
     executed: boolean;
-    inconsistentState: boolean;
+    inconsistent: boolean;
     onExecute: (id: string) => void;
     onUpdate: (updatedCard: any) => void;
     onDelete: (id: string) => void; // Add onDelete function
@@ -51,6 +52,7 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     <CardContainer>
       <TitleBand>{data.title}</TitleBand>
       <CloseButton onClick={handleDelete}>×</CloseButton>
+      {data.inconsistent && <WarningIcon src={warningIcon} alt="Inconsistent" />} {/* Add warning icon */}
       {isExecuting && <LoadingMessage>Loading...</LoadingMessage>}
       <StatusContainer>
         <ExecuteButton onClick={handleExecute} data-tooltip="Execute Card" disabled={isExecuting}>

@@ -35,7 +35,7 @@ export const StatusDot = styled.span<{ status: string }>`
   margin-right: 5px;
 `;
 
-export const InconsistentStateMessage = styled.p`
+export const InconsistentMessage = styled.p`
   color: red;
   font-weight: bold;
 `;

@@ -212,3 +212,26 @@ align - items: center;
   background: #ff8c00; /* Darker orange on hover */
 }
 `;
+export const ResolveButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 90px; /* Adjust position to the left of the edit button */
+  background: orange; /* Orange background color */
+  padding: 5px 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 15px;
+    height: 15px;
+    margin-right: 3px;
+    filter: brightness(0); /* Change the image color to black */
+  }
+
+  &:hover {
+    background: #ff8c00; /* Darker orange on hover */
+  }
+`;
