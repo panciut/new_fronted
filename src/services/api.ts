@@ -82,3 +82,13 @@ export const evaluateCard = async (cardId: string) => {
         throw error;
     }
 };
+
+export const deleteCard = async (cardId: string) => {
+    try {
+        const response = await axios.delete(`${API_URL}/cards/${cardId}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting card with id ${cardId}:`, error);
+        throw error;
+    }
+};

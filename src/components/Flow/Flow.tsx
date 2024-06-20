@@ -67,12 +67,17 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
-      node.data = { ...node.data, onExecute };
+      node.data = { ...node.data, onExecute, onDelete }; // Pass onDelete function
       return node;
     });
 
     setNodes(layoutedNodes);
   }, [initialNodes, initialEdges]);
+
+  const onDelete = (id: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== id));
+    setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+  };
 
   return (
     <FlowContainer>

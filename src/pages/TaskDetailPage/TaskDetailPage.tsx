@@ -38,6 +38,7 @@ const TaskDetailPage: React.FC = () => {
             executed: card.executed,
             inconsistentState: card.inconsistentState,
             onExecute: handleExecute, // Pass the handleExecute function
+            onDelete: handleDelete, // Pass the handleDelete function
           },
           position: { x: 200 * index, y: 100 },
           type: 'cardNode',
@@ -133,6 +134,11 @@ const TaskDetailPage: React.FC = () => {
         return node;
       })
     );
+  };
+
+  const handleDelete = (id: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== id));
+    setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
   };
 
   if (loading) return <p>Loading...</p>;

@@ -85,3 +85,16 @@ export const LoadingMessage = styled.p`
   color: #000;
   text-align: center; /* Center align the text */
 `;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    color: red;
+  }
+`;

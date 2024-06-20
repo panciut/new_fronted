@@ -1,9 +1,9 @@
 // src/components/Flow/CardNode.tsx
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { CardContainer, CardTitle, StatusDot, ExecuteButton, StatusContainer, LoadingMessage } from './CardNode.styles';
+import { CardContainer, CardTitle, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton } from './CardNode.styles';
 import executeIcon from '../../assets/execute.svg';
-import { executeCard } from '../../services/api';
+import { executeCard, deleteCard } from '../../services/api'; // Import deleteCard API
 
 interface CardNodeProps {
   data: {
@@ -12,7 +12,8 @@ interface CardNodeProps {
     executed: boolean;
     inconsistentState: boolean;
     onExecute: (id: string) => void;
-    onUpdate: (updatedCard: any) => void; // Add this function to update the parent component
+    onUpdate: (updatedCard: any) => void;
+    onDelete: (id: string) => void; // Add onDelete function
   };
 }
 
@@ -32,8 +33,22 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
     }
   };
 
+  const handleDelete = async (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent popover from opening
+    const confirmed = window.confirm('Are you sure you want to delete this card?');
+    if (confirmed) {
+      try {
+        await deleteCard(data.id);
+        data.onDelete(data.id); // Notify the parent about the deletion
+      } catch (error) {
+        console.error('Error deleting card:', error);
+      }
+    }
+  };
+
   return (
     <CardContainer>
+      <CloseButton onClick={handleDelete}>×</CloseButton>
       <CardTitle>{data.title}</CardTitle>
       {isExecuting && <LoadingMessage>Loading...</LoadingMessage>}
       <StatusContainer>
