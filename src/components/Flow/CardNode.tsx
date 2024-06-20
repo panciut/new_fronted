@@ -1,7 +1,8 @@
 // src/components/Flow/CardNode.tsx
+
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { CardContainer, CardTitle, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton } from './CardNode.styles';
+import { CardContainer, TitleBand, StatusDot, ExecuteButton, StatusContainer, LoadingMessage, CloseButton } from './CardNode.styles';
 import executeIcon from '../../assets/execute.svg';
 import { executeCard, deleteCard } from '../../services/api'; // Import deleteCard API
 
@@ -48,8 +49,8 @@ const CardNode: React.FC<CardNodeProps> = ({ data }) => {
 
   return (
     <CardContainer>
+      <TitleBand>{data.title}</TitleBand>
       <CloseButton onClick={handleDelete}>×</CloseButton>
-      <CardTitle>{data.title}</CardTitle>
       {isExecuting && <LoadingMessage>Loading...</LoadingMessage>}
       <StatusContainer>
         <ExecuteButton onClick={handleExecute} data-tooltip="Execute Card" disabled={isExecuting}>

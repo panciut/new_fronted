@@ -1,19 +1,38 @@
 // src/components/Flow/CardNode.styles.ts
+
 import styled from 'styled-components';
 
 export const CardContainer = styled.div`
   border: 1px solid #ddd;
-  padding: 16px;
+  padding: 16px 0 16px 16px; /* Adjust padding to fit the title band */
+  background-color: green;
+  border-color: black;
   margin: 16px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 2px solid black; /* Added black stroke */
   background-color: #fff;
   width: 200px;
   height: 120px;
   position: relative;
 `;
 
+export const TitleBand = styled.div`
+  background-color: #faa419;
+  width: 100%;
+  padding: 8px 0;
+  border-bottom: 2px solid black;
+  border-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+`;
+
 export const CardTitle = styled.h2`
-  margin-top: 0;
+  margin: 0;
   font-size: 16px;
 `;
 

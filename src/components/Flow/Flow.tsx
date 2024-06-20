@@ -1,4 +1,5 @@
-// ./src/components/Flow/Flow.tsx
+// src/components/Flow/Flow.tsx
+
 import React, { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, Controls, MiniMap, Node, Edge, useNodesState, useEdgesState, addEdge, Connection } from 'react-flow-renderer';
 import dagre from 'dagre';
@@ -67,7 +68,7 @@ const Flow: React.FC<FlowProps> = ({ initialNodes, initialEdges, onNodeClick, on
         y: nodeWithPosition.y - nodeHeight / 2,
       };
       node.type = 'cardNode';
-      node.data = { ...node.data, onExecute, onDelete }; // Pass onDelete function
+      node.data = { ...node.data, onExecute, onDelete };
       return node;
     });
 

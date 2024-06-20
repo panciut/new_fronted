@@ -28,7 +28,7 @@ interface DraggablePopoverProps {
   onRequestClose: () => void;
   index: number;
   onExecute: (id: string) => void;
-  onCardUpdate: (card: any) => void; // New prop to handle card updates
+  onCardUpdate: (card: any) => void;
 }
 
 const DraggablePopover: React.FC<DraggablePopoverProps> = ({
@@ -36,26 +36,26 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   onRequestClose,
   index,
   onExecute,
-  onCardUpdate, // Receive the new prop
+  onCardUpdate,
 }) => {
   const [card, setCard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isPromptCollapsed, setIsPromptCollapsed] = useState(false); // Default to open
-  const [isContextCollapsed, setIsContextCollapsed] = useState(true); // Default to open
+  const [isPromptCollapsed, setIsPromptCollapsed] = useState(false);
+  const [isContextCollapsed, setIsContextCollapsed] = useState(true);
   const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
   const [previousCardsOutputs, setPreviousCardsOutputs] = useState<{ [key: string]: string | null }>({});
-  const [isEditing, setIsEditing] = useState(false); // State to track editing mode
-  const [updatedCard, setUpdatedCard] = useState<any>({}); // State to track updated card details
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedCard, setUpdatedCard] = useState<any>({});
 
   useEffect(() => {
     const getCard = async () => {
       try {
         const data = await fetchCardById(cardId);
         setCard(data);
-        setUpdatedCard(data); // Initialize updated card state
+        setUpdatedCard(data);
       } catch (err) {
         setError('Failed to fetch card. Please try again later.');
       } finally {
@@ -91,45 +91,44 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
 
   const handleExecute = async () => {
     setIsExecuting(true);
-    setIsEvaluating(true); // Disable both buttons
+    setIsEvaluating(true);
     try {
       await executeCard(cardId);
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
-      onExecute(cardId); // Notify the parent about the execution
-      onCardUpdate(updatedCard); // Notify the parent about the card update
+      onExecute(cardId);
+      onCardUpdate(updatedCard);
     } catch (error) {
       console.error('Error executing card:', error);
     } finally {
       setIsExecuting(false);
-      setIsEvaluating(false); // Re-enable both buttons
+      setIsEvaluating(false);
     }
   };
 
   const handleEvaluate = async () => {
     setIsEvaluating(true);
-    setIsExecuting(true); // Disable both buttons
+    setIsExecuting(true);
     try {
       await evaluateCard(cardId);
       const updatedCard = await fetchCardById(cardId);
       setCard(updatedCard);
-      onExecute(cardId); // Notify the parent about the evaluation
-      onCardUpdate(updatedCard); // Notify the parent about the card update
+      onExecute(cardId);
+      onCardUpdate(updatedCard);
     } catch (error) {
       console.error('Error evaluating card:', error);
     } finally {
       setIsEvaluating(false);
-      setIsExecuting(false); // Re-enable both buttons
+      setIsExecuting(false);
     }
   };
 
   const handleEditClick = async () => {
     if (isEditing) {
-      // If currently editing, save the changes
       try {
         await updateCard(updatedCard);
         setCard(updatedCard);
-        onCardUpdate(updatedCard); // Notify the parent about the card update
+        onCardUpdate(updatedCard);
       } catch (error) {
         console.error('Error updating card:', error);
       }

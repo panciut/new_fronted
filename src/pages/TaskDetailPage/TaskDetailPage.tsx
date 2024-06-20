@@ -21,7 +21,7 @@ const TaskDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [openPopovers, setOpenPopovers] = useState<string[]>([]); // Allow multiple popovers but not duplicates
+  const [openPopovers, setOpenPopovers] = useState<string[]>([]);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
 
@@ -34,13 +34,13 @@ const TaskDetailPage: React.FC = () => {
         const newNodes = data.cards.map((card: any, index: number) => ({
           id: card._id,
           data: {
-            id: card._id, // Ensure ID is passed here
+            id: card._id,
             title: card.title,
             executed: card.executed,
             inconsistentState: card.inconsistentState,
-            onExecute: handleExecute, // Pass the handleExecute function
-            onDelete: handleDelete, // Pass the handleDelete function
-            onCardUpdate: handleCardUpdate, // Pass the handleCardUpdate function
+            onExecute: handleExecute,
+            onDelete: handleDelete,
+            onCardUpdate: handleCardUpdate,
           },
           position: { x: 200 * index, y: 100 },
           type: 'cardNode',
@@ -50,27 +50,22 @@ const TaskDetailPage: React.FC = () => {
 
         const newEdges: Edge[] = [];
         data.cards.forEach((card: any) => {
-          if (typeof card.nextCards === 'object') {
-            Object.keys(card.nextCards).forEach((nextCardId: string) => {
-              newEdges.push({
-                id: `e${card._id}-${nextCardId}`,
-                source: card._id,
-                target: nextCardId,
-                ...edgeOptions,
-              });
+          card.nextCards.forEach((nextCardId: string) => {
+            newEdges.push({
+              id: `e${card._id}-${nextCardId}`,
+              source: card._id,
+              target: nextCardId,
+              ...edgeOptions,
             });
-          }
-
-          if (typeof card.previousCards === 'object') {
-            Object.keys(card.previousCards).forEach((prevCardId: string) => {
-              newEdges.push({
-                id: `e${prevCardId}-${card._id}`,
-                source: prevCardId,
-                target: card._id,
-                ...edgeOptions,
-              });
+          });
+          card.previousCards.forEach((prevCardId: string) => {
+            newEdges.push({
+              id: `e${prevCardId}-${card._id}`,
+              source: prevCardId,
+              target: card._id,
+              ...edgeOptions,
             });
-          }
+          });
         });
         setEdges(newEdges);
       } catch (err) {
@@ -117,7 +112,7 @@ const TaskDetailPage: React.FC = () => {
           return node;
         })
       );
-      fetchTaskData(); // Refresh the task data to update the execution status
+      fetchTaskData();
     } catch (error) {
       console.error('Error executing card:', error);
     }

@@ -10,14 +10,14 @@ import {
   CloseButton,
   modalStyles,
 } from './AddCardModal.styles';
-import { createCard } from '../../services/api'; // Import the API function
+import { createCard } from '../../services/api';
 
 interface AddCardModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   taskId: string;
   currentCards: any[];
-  onCardCreated: () => void; // Callback to refresh the card list after creation
+  onCardCreated: () => void;
 }
 
 const AddCardModal: React.FC<AddCardModalProps> = ({
@@ -30,7 +30,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [objective, setObjective] = useState('');
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
-  const [generativeModel, setGenerativeModel] = useState('gpt35Turbo'); // Set default value
+  const [generativeModel, setGenerativeModel] = useState('gpt35Turbo');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -45,7 +45,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     };
 
     try {
-      await createCard(newCard); // Use the imported function
+      await createCard(newCard);
       onCardCreated();
       onRequestClose();
     } catch (error) {
