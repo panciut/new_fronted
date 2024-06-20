@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
-import { fetchCardById, executeCard, evaluateCard } from '../../services/api';
+import { fetchCardById, fetchPreviousCardsOutputs, executeCard, evaluateCard } from '../../services/api';
 import {
   CloseButton,
   PopoverContent,
@@ -40,8 +40,10 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
   const [error, setError] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
+  const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
+  const [isContextCollapsed, setIsContextCollapsed] = useState(true);
   const [isOutputCollapsed, setIsOutputCollapsed] = useState(true);
+  const [previousCardsOutputs, setPreviousCardsOutputs] = useState<{ [key: string]: string | null }>({});
 
   useEffect(() => {
     const getCard = async () => {
@@ -57,6 +59,21 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
 
     getCard();
   }, [cardId]);
+
+  useEffect(() => {
+    const getPreviousCardsOutputs = async () => {
+      try {
+        const data = await fetchPreviousCardsOutputs(cardId);
+        setPreviousCardsOutputs(data);
+      } catch (err) {
+        console.error('Failed to fetch previous cards outputs', err);
+      }
+    };
+
+    if (card) {
+      getPreviousCardsOutputs();
+    }
+  }, [card]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -122,43 +139,55 @@ const DraggablePopover: React.FC<DraggablePopoverProps> = ({
                 <Value>{card.objective}</Value>
               </Section>
               <Section>
-                <Label>Status:</Label>
-                <Value>{card.executed ? 'Executed' : 'Not Executed'}</Value>
-              </Section>
-              <Section>
-                <Label>Evaluation:</Label>
-                <Value>{card.evaluated ? 'Evaluated' : 'Not Evaluated'}</Value>
-              </Section>
-              <Section>
-                <SectionTitle onClick={() => setIsInputCollapsed(!isInputCollapsed)}>
-                  Inputs {isInputCollapsed ? '▼' : '▲'}
+                <SectionTitle onClick={() => setIsPromptCollapsed(!isPromptCollapsed)}>
+                  Prompt {isPromptCollapsed ? '▼' : '▲'}
                 </SectionTitle>
-                <SectionContent isCollapsed={isInputCollapsed}>
-                  {card.inputs.map((input: any, index: number) => (
-                    <div key={index}>
-                      <Label>Prompt:</Label>
-                      <Value>{input.prompt}</Value>
-                      <br />
-                      <Label>Context:</Label>
-                      <Value>{input.context}</Value>
-                    </div>
-                  ))}
+                <SectionContent isCollapsed={isPromptCollapsed}>
+                  <div>
+                    <Label>Prompt:</Label>
+                    <Value>{card.prompt}</Value>
+                  </div>
                 </SectionContent>
               </Section>
-              {card.output && (
-                <Section>
-                  <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
-                    Outputs {isOutputCollapsed ? '▼' : '▲'}
-                  </SectionTitle>
-                  <SectionContent isCollapsed={isOutputCollapsed}>
+              <Section>
+                <SectionTitle onClick={() => setIsContextCollapsed(!isContextCollapsed)}>
+                  Context {isContextCollapsed ? '▼' : '▲'}
+                </SectionTitle>
+                <SectionContent isCollapsed={isContextCollapsed}>
+                  <div>
+                    <Label>Context:</Label>
+                    <Value>{card.context}</Value>
+                  </div>
+                  {card.previousCards && Object.keys(card.previousCards).length > 0 && (
                     <div>
-                      <Label>Generated Text:</Label>
-                      <Value>{card.output.generatedText}</Value>
+                      <Label>Previous Cards Outputs:</Label>
+                      {Object.entries(previousCardsOutputs).map(([prevCardId, output]) => (
+                        <div key={prevCardId}>
+                          <Value>{output || 'No output generated'}</Value>
+                        </div>
+                      ))}
                     </div>
-                  </SectionContent>
-                </Section>
-              )}
-              {card.output && (
+                  )}
+                </SectionContent>
+              </Section>
+              <Section>
+                <SectionTitle onClick={() => setIsOutputCollapsed(!isOutputCollapsed)}>
+                  Output {isOutputCollapsed ? '▼' : '▲'}
+                </SectionTitle>
+                <SectionContent isCollapsed={isOutputCollapsed}>
+                  <div>
+                    {card.output ? (
+                      <>
+                        <Label>Generated Text:</Label>
+                        <Value>{card.output.generatedText}</Value>
+                      </>
+                    ) : (
+                      <Value>No output generated yet</Value>
+                    )}
+                  </div>
+                </SectionContent>
+              </Section>
+              {card.output && card.output.evaluationMetrics && (
                 <Section>
                   <h3>Evaluation Metrics</h3>
                   {card.output.evaluationMetrics.map((metric: any) => (

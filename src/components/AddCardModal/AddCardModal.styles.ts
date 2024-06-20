@@ -88,7 +88,7 @@ export const DropdownContainer = styled.div`
 `;
 
 interface DropdownMenuProps {
-    show: boolean;
+  show: boolean;
 }
 
 export const DropdownMenu = styled.div<DropdownMenuProps>`
@@ -103,3 +103,19 @@ export const DropdownMenu = styled.div<DropdownMenuProps>`
   z-index: 1002; /* Ensure dropdown is above other elements */
   display: ${props => (props.show ? 'block' : 'none')};
 `;
+
+export const modalStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    zIndex: 1000, // Ensure overlay is on top
+  },
+  content: {
+    top: '10px',
+    right: '10px',
+    bottom: '10px',
+    left: 'auto',
+    width: '30%', // Takes one-third of the page width
+    padding: '20px',
+    zIndex: 1001, // Ensure modal content is on top
+  },
+};

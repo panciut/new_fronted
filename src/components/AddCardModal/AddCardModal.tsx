@@ -1,7 +1,19 @@
 // src/components/AddCardModal/AddCardModal.tsx
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { FormContainer, FormLabel, FormInput, FormTextArea, FormButton, CloseButton, DropdownSelect, DropdownButton, DropdownContainer, DropdownMenu } from './AddCardModal.styles';
+import {
+  FormContainer,
+  FormLabel,
+  FormInput,
+  FormTextArea,
+  FormButton,
+  CloseButton,
+  DropdownSelect,
+  DropdownButton,
+  DropdownContainer,
+  DropdownMenu,
+  modalStyles,
+} from './AddCardModal.styles';
 import { createCard } from '../../services/api'; // Import the API function
 
 interface AddCardModalProps {
@@ -12,13 +24,20 @@ interface AddCardModalProps {
   onCardCreated: () => void; // Callback to refresh the card list after creation
 }
 
-const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, taskId, currentCards, onCardCreated }) => {
+const AddCardModal: React.FC<AddCardModalProps> = ({
+  isOpen,
+  onRequestClose,
+  taskId,
+  currentCards,
+  onCardCreated,
+}) => {
   const [title, setTitle] = useState('');
   const [objective, setObjective] = useState('');
   const [previousCards, setPreviousCards] = useState<string[]>([]);
   const [nextCards, setNextCards] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
   const [context, setContext] = useState('');
+  const [generativeModel, setGenerativeModel] = useState('gpt35Turbo'); // Set default value
   const [showPreviousDropdown, setShowPreviousDropdown] = useState(false);
   const [showNextDropdown, setShowNextDropdown] = useState(false);
 
@@ -28,15 +47,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
     const newCard = {
       title,
       objective,
-      generativeModel: 'gpt35Turbo',
+      generativeModel,
       previousCards,
       nextCards,
-      inputs: [
-        {
-          prompt,
-          context,
-        },
-      ],
+      prompt,
+      context,
       taskId,
     };
 
@@ -58,34 +73,15 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
   };
 
   const handlePreviousCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPreviousCards(Array.from(e.target.selectedOptions, option => option.value));
+    setPreviousCards(Array.from(e.target.selectedOptions, (option) => option.value));
   };
 
   const handleNextCardChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNextCards(Array.from(e.target.selectedOptions, option => option.value));
+    setNextCards(Array.from(e.target.selectedOptions, (option) => option.value));
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onRequestClose={onRequestClose} 
-      contentLabel="Add Card" 
-      style={{
-        overlay: {
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          zIndex: 1000, // Ensure overlay is on top
-        },
-        content: {
-          top: '10px',
-          right: '10px',
-          bottom: '10px',
-          left: 'auto',
-          width: '30%', // Takes one-third of the page width
-          padding: '20px',
-          zIndex: 1001, // Ensure modal content is on top
-        }
-      }}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Add Card" style={modalStyles}>
       <FormContainer>
         <CloseButton onClick={onRequestClose}>×</CloseButton>
         <h2>Create New Card</h2>
@@ -99,6 +95,13 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
             <FormInput type="text" value={objective} onChange={(e) => setObjective(e.target.value)} required />
           </FormLabel>
           <FormLabel>
+            Generative Model:
+            <FormInput as="select" value={generativeModel} onChange={(e) => setGenerativeModel(e.target.value)}>
+              <option value="gpt35Turbo">gpt35Turbo</option>
+              {/* Future options can be added here */}
+            </FormInput>
+          </FormLabel>
+          <FormLabel>
             Previous Cards:
             <DropdownContainer>
               <DropdownButton type="button" onClick={togglePreviousDropdown}>
@@ -106,8 +109,10 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
               </DropdownButton>
               <DropdownMenu show={showPreviousDropdown}>
                 <DropdownSelect multiple value={previousCards} onChange={handlePreviousCardChange}>
-                  {currentCards.map(card => (
-                    <option key={card._id} value={card._id}>{card.title}</option>
+                  {currentCards.map((card) => (
+                    <option key={card._id} value={card._id}>
+                      {card.title}
+                    </option>
                   ))}
                 </DropdownSelect>
               </DropdownMenu>
@@ -121,8 +126,10 @@ const AddCardModal: React.FC<AddCardModalProps> = ({ isOpen, onRequestClose, tas
               </DropdownButton>
               <DropdownMenu show={showNextDropdown}>
                 <DropdownSelect multiple value={nextCards} onChange={handleNextCardChange}>
-                  {currentCards.map(card => (
-                    <option key={card._id} value={card._id}>{card.title}</option>
+                  {currentCards.map((card) => (
+                    <option key={card._id} value={card._id}>
+                      {card.title}
+                    </option>
                   ))}
                 </DropdownSelect>
               </DropdownMenu>
